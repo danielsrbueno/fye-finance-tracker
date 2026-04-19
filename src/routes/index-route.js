@@ -2,7 +2,7 @@ const express = require("express")
 const router = express.Router()
 
 router.get("/", function (req, res) {
-  res.render("index")
+  res.json({ message: 'API funcionando' });
 })
 
 module.exports = router
