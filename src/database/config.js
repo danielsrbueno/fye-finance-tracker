@@ -1,4 +1,3 @@
-
 const mysql = require("mysql2")
 
 const mySqlConfig = {
@@ -9,8 +8,7 @@ const mySqlConfig = {
   port: process.env.DB_PORT
 }
 
-function databaseConection(command) {
-
+const execute = (command) => {
   if (process.env.ENVIRONMENT !== "prod" && process.env.ENVIRONMENT !== "dev") {
     console.log("\nO ambiente (produção ou desenvolvimento) não foi definido em .env ou dev.env ou app.js\n")
     return Promise.reject("Ambiente não configurado em .env")
@@ -34,5 +32,5 @@ function databaseConection(command) {
 }
 
 module.exports = {
-  databaseConection
+  execute
 }
