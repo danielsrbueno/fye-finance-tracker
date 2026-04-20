@@ -1,6 +1,6 @@
 const userModel = require('../models/user-model')
 
-const authentication = (req, res) => {
+const login = (req, res) => {
   const email = req.body.userEmail
   const password = req.body.userPassword
 
@@ -9,7 +9,7 @@ const authentication = (req, res) => {
   if (!password)
     return res.status(400).send("Sua senha está undefined!")
 
-  userModel.authentication(email, password)
+  userModel.login(email, password)
   .then(result => res.send(result))
   .catch(error => console.log("Algo deu errado: " + error))
 }
@@ -32,6 +32,6 @@ const register = (req, res) => {
 }
 
 module.exports = {
-  authentication,
+  login,
   register
 }

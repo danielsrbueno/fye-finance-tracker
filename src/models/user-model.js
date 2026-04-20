@@ -1,6 +1,6 @@
 const database = require("../database/config")
 
-const authentication = (email, password) => {
+const login = (email, password) => {
   const command = `select id, user_name, email from users where email='${email}' and passwd='${password}'`
 
   return database.execute(command)
@@ -13,6 +13,6 @@ const register = (username, email, password) => {
 }
 
 module.exports = {
-  authentication,
+  login,
   register
 }
