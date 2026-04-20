@@ -10,8 +10,15 @@ const login = (req, res) => {
     return res.status(400).send("Sua senha está undefined!")
 
   userModel.login(email, password)
-  .then(result => res.send(result))
-  .catch(error => console.log("Algo deu errado: " + error))
+  .then(result => {
+    if (result.length === 1)
+      return res.send(result[0])
+    return res.status(404).json({ message: "Login inválido. Verifique suas credenciais." })
+  })
+  .catch(error => {
+    console.log(error)
+    res.status(500).json({ message: "Algo deu errado. Tente novamente mais tarde."})
+  })
 }
 
 const register = (req, res) => {
@@ -28,7 +35,10 @@ const register = (req, res) => {
 
   userModel.register(username, email, password)
   .then(result => res.status(201).send(result))
-  .catch(error => console.log("Algo deu errado: " + error))
+  .catch(error => {
+    console.log(error)
+    res.status(500).json({ message: "Algo deu errado. Tente novamente mais tarde."})
+  })
 }
 
 module.exports = {
