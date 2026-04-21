@@ -7,7 +7,7 @@ router.post("/create", (req, res) => {
   financeController.create(req, res)
 })
 
-router.post("/update", (req, res) => {
+router.put("/update", (req, res) => {
   financeController.update(req, res)
 })
 
