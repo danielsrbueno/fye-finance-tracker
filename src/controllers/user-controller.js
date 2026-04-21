@@ -5,9 +5,9 @@ const login = (req, res) => {
   const password = req.body.userPassword
 
   if (!email)
-    return res.status(400).send("Seu email está undefined!")
+    return res.status(400).json({ message: "Seu email está undefined!" })
   if (!password)
-    return res.status(400).send("Sua senha está undefined!")
+    return res.status(400).json({ message: "Sua senha está undefined!" })
 
   userModel.login(email, password)
   .then(result => {
@@ -27,11 +27,11 @@ const register = (req, res) => {
   const password = req.body.userPassword
 
   if (!username)
-    return res.status(400).send("Seu nome está undefined!")
+    return res.status(400).json({ message: "Seu nome está undefined!" })
   if (!email)
-    return res.status(400).send("Seu email está undefined!")
+    return res.status(400).json({ message: "Seu email está undefined!" })
   if (!password)
-    return res.status(400).send("Sua senha está undefined!")
+    return res.status(400).json({ message: "Sua senha está undefined!" })
 
   userModel.register(username, email, password)
   .then(result => res.status(201).send(result))
