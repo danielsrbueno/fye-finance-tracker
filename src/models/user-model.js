@@ -1,7 +1,7 @@
 const database = require("../database/config")
 
 const login = (email, password) => {
-  const command = `select id, user_name, email from users where email='${email}' and passwd='${password}'`
+  const command = `select id, user_name, email from users where email='${email}' and passwd='${password}' and deleted_at is null`
 
   return database.execute(command)
 }
