@@ -11,4 +11,8 @@ router.post("/update", (req, res) => {
   financeController.update(req, res)
 })
 
+router.delete("/remove", (req, res) => {
+  financeController.remove(req, res)
+})
+
 module.exports = router

@@ -12,7 +12,14 @@ const update = (id, name, category, type, amount, date, description) => {
   return database.execute(command)
 }
 
+const remove = (id) => {
+  const command = `update items set deleted_at = current_timestamp where id = ${id}`
+
+  return database.execute(command)
+}
+
 module.exports = {
   create,
-  update
+  update,
+  remove
 }

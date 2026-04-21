@@ -60,7 +60,22 @@ const update = (req, res) => {
   })
 }
 
+const remove = (req, res) => {
+  const id = req.body.financeId
+
+  if (!id)
+    return res.status(400).json({ message: "Id da finança está undefined!" })
+
+  financeModel.remove(id)
+  .then(result => res.status(200).send(result))
+  .catch(error => {
+    console.log(error)
+    res.status(500).json({ message: "Algo deu errado. Tente novamente mais tarde."})
+  })
+}
+
 module.exports = {
   create,
-  update
+  update,
+  remove
 }
