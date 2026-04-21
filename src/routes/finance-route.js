@@ -15,4 +15,8 @@ router.delete("/remove", (req, res) => {
   financeController.remove(req, res)
 })
 
+router.get("/:userId", (req, res) => {
+  financeController.getAllByUser(req, res)
+})
+
 module.exports = router

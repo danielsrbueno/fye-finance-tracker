@@ -74,8 +74,28 @@ const remove = (req, res) => {
   })
 }
 
+const getAllByUser = (req, res) => {
+  const user = req.params.userId
+
+  if (!user)
+    return res.status(400).json({ message: "Id do usuário está undefined!" })
+
+  financeModel.getAllByUser(user)
+  .then(result => {
+    if (result.length === 0)
+      return res.status(204).json({ message: "Nenhuma transação encontrada."})
+
+    res.status(200).send(result)
+  })
+  .catch(error => {
+    console.log(error)
+    res.status(500).json({ message: "Algo deu errado. Tente novamente mais tarde."})
+  })
+}
+
 module.exports = {
   create,
   update,
-  remove
+  remove,
+  getAllByUser
 }

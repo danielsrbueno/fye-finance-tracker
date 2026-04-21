@@ -18,8 +18,15 @@ const remove = (id) => {
   return database.execute(command)
 }
 
+const getAllByUser = (user) => {
+  const command = ` select i.id, i.item_name, c.category, t.item_type, i.item_description, i.amount, i.event_date, i.created_at, i.updated_at from items i left join item_categories c on i.item_category_id = c.id left join item_types t on i.item_type_id = t.id where i.user_id = ${user} and deleted_at is null;`
+
+  return database.execute(command)
+}
+
 module.exports = {
   create,
   update,
-  remove
+  remove,
+  getAllByUser
 }
