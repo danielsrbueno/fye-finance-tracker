@@ -7,4 +7,8 @@ router.post("/create", (req, res) => {
   financeController.create(req, res)
 })
 
+router.post("/update", (req, res) => {
+  financeController.update(req, res)
+})
+
 module.exports = router
