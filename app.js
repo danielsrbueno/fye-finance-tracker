@@ -13,6 +13,7 @@ const APP_HOST = process.env.APP_HOST
 const app = express()
 const indexRouter = require("./src/routes/index-route")
 const userRouter = require("./src/routes/user-route")
+const transactionRouter = require("./src/routes/transaction-route")
 
 app.use(express.json())
 app.use(express.urlencoded({ extended: false }))
@@ -21,6 +22,7 @@ app.use(express.static(path.join(__dirname, "public")))
 app.use(cors())
 app.use("/", indexRouter)
 app.use("/user", userRouter)
+app.use("/transaction", transactionRouter)
 
 app.listen(APP_PORT, () => {
     console.log(`
