@@ -73,6 +73,22 @@ const fieldValidation = (userEmail, userPassword) => {
   return errorQnt === 0
 }
 
+let showPasswordKey = false
+const toggleShowPassword = () => {
+  const showPasswordElement = showPassword
+  const passwordElement = inpPassword
+  showPasswordKey = !showPasswordKey
+
+  if (showPasswordKey) {
+    showPasswordElement.innerHTML = "<i class='ph ph-eye'></i>"
+    passwordElement.type = "text"
+  }
+  else {
+    showPasswordElement.innerHTML = "<i class='ph ph-eye-closed'></i>"
+    passwordElement.type = "password"
+  }
+    
+}
 const showToast = (message, situation) => {
   const outputMessage = `<i class="ph ph-${situation ? 'user-check correct' : 'shield-warning error'}"></i><span class='${situation ? 'correct' : 'error'}'>${message}</span>`
   const toast = toastContainer
