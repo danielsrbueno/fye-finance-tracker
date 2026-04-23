@@ -583,7 +583,7 @@ footer {
 
 .footer-credit {
   display: inline-flex;
-  gap: 3px;
+  gap: 4px;
   font-size: 0.875rem;
   align-items: center;
   margin: 0;
