@@ -28,7 +28,7 @@ const signIn = () => {
 
         showToast("Login realizado com sucesso!", true)
         setTimeout(() => {
-          window.location = "../index.html"
+          window.location = "../app/index.html"
         }, 3500)
       })
     }
