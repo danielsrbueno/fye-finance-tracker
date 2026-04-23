@@ -54,11 +54,13 @@
           <label class="mono" for="inpPassword">Senha</label>
           <input class="mono" type="password" id="inpPassword" placeholder="••••••" oninput="passwordValidation(inpPassword.value);calculateLevelPassword('password', inpPassword.value)">
           <span class="mono field-error" id="errPassword"></span>
+          <span class="showPassword" id="showPassword" onclick="toggleShowPassword('password')"><i class="ph ph-eye-closed"></i></span>
         </div>
         <div class="field-group">
           <label class="mono" for="inpConfirmPassword">Confirmar senha</label>
           <input class="mono" type="password" id="inpConfirmPassword" placeholder="••••••" oninput="confirmPasswordValidation(inpConfirmPassword.value);calculateLevelPassword('confirm', inpConfirmPassword.value)">
           <span class="mono field-error" id="errConfirmPassword"></span>
+          <span class="showPassword" id="showConfirmPassword" onclick="toggleShowPassword('confirm')"><i class="ph ph-eye-closed"></i></span>
         </div>
         <button class="button-outline register-submit" onclick="register()">Cadastrar</button>
       </div>
