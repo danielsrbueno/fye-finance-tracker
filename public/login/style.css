@@ -220,6 +220,18 @@ ul {
   font-size: 0.875rem;
 }
 
+.field-group #showPassword {
+  position: absolute;
+  top: 1.8rem;
+  right: 0.6rem;
+  cursor: pointer;
+}
+
+.field-group #showPassword i {
+  font-size: 1.4rem;
+  color: var(--color-taupe-900);
+}
+
 .login-submit {
   justify-content: center;
 }

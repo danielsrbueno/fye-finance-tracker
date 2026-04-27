@@ -109,6 +109,16 @@ function fieldValidation (userName, userEmail, userPassword, userConfirmPassword
   const isPasswordValid = passwordValidation(userPassword)
   const isConfirmPasswordValid = confirmPasswordValidation(userPassword, userConfirmPassword)
 
+  errPassword.style.height = "1rem"
+  errPassword.style.width = "100%"
+  errPassword.style.backgroundColor = '#0000'
+  errPassword.style.transform = "translateY(0px)"
+
+  errConfirmPassword.style.height = "1rem"
+  errConfirmPassword.style.width = "100%"
+  errConfirmPassword.style.backgroundColor = '#0000'
+  errConfirmPassword.style.transform = "translateY(0px)"
+
   return isNameValid && isEmailValid && isPasswordValid && isConfirmPasswordValid
 }
 
@@ -168,6 +178,36 @@ function calculateLevelPassword (type, password) {
   else
     output.style.backgroundColor = '#711'
 
+}
+
+let showPasswordKey = false
+let showConfirmPasswordKey = false
+const toggleShowPassword = (type) => {
+  let showPasswordElement = null
+  let passwordElement = null
+  let thisPasswordKey = null
+  
+  if (type == "password") {
+    showPasswordElement = showPassword
+    passwordElement = inpPassword
+    showPasswordKey = !showPasswordKey
+    thisPasswordKey = showPasswordKey
+  }
+  else {
+    showPasswordElement = showConfirmPassword
+    passwordElement = inpConfirmPassword
+    showConfirmPasswordKey = !showConfirmPasswordKey
+    thisPasswordKey = showConfirmPasswordKey
+  }
+
+  if (thisPasswordKey) {
+    showPasswordElement.innerHTML = "<i class='ph ph-eye'></i>"
+    passwordElement.type = "text"
+  }
+  else {
+    showPasswordElement.innerHTML = "<i class='ph ph-eye-closed'></i>"
+    passwordElement.type = "password"
+  }
 }
 
 const showToast = (message, situation) => {
