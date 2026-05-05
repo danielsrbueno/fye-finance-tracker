@@ -94,7 +94,6 @@ ul {
   box-shadow: 0 10px 15px -3px var(--color-taupe-950),
     0 4px 6px -4px var(--color-taupe-950);
   border-radius: 0 0.75rem 0.75rem 0;
-  justify-content: space-between;
 }
 
 .sidebar .header-logo {
@@ -164,7 +163,7 @@ ul {
 }
 
 .sidebar .sidebar-nav .icon-sm {
-  font-size: 1.25rem;
+  font-size: 1.4rem;
 }
 
 .sidebar-user {
@@ -179,6 +178,9 @@ ul {
   display: flex;
   align-items: center;
   justify-content: space-around;
+  position: absolute;
+  width: calc(100% - 3rem);
+  bottom: 1.5rem;
 }
 
 .sidebar-user:hover {
