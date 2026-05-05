@@ -83,7 +83,7 @@ const getAllByUser = (req, res) => {
   transactionModel.getAllByUser(user)
   .then(result => {
     if (result.length === 0)
-      return res.status(204).json({ message: "Nenhuma transação encontrada."})
+      return res.status(204)
 
     res.status(200).send(result)
   })
@@ -93,9 +93,35 @@ const getAllByUser = (req, res) => {
   })
 }
 
+const getHomeChartsData = async (req, res) => {
+  const user = req.params.userId
+
+  if (!user)
+    return res.status(400).json({ message: "Id do usuário está undefined!" })
+
+  // é preciso usar o try/catch para tratar erros, porém ainda não foi passado em nenhuma api ou pelo professor
+  const totalByItemTypes = await transactionModel.getTotalByItemTypes(user)
+
+  const income = await transactionModel.getTotalTypeByItemCategories(user, 1)
+  const expense = await transactionModel.getTotalTypeByItemCategories(user, 2)
+  const investment = await transactionModel.getTotalTypeByItemCategories(user, 3)
+
+  const response = {
+    totalByItemTypes,
+    totalType: {
+      income,
+      expense,
+      investment
+    }
+  }
+
+  return res.status(200).send(response)
+}
+
 module.exports = {
   create,
   update,
   remove,
-  getAllByUser
+  getAllByUser,
+  getHomeChartsData
 }
