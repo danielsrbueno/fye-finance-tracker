@@ -39,18 +39,6 @@ const init = () => {
 }
 
 const loadData = async (userId) => {
-  const colors = [
-    //['#aba09c', '#7c6d67', '#5b4f4b', '#473c39', '#2b2422',], // taupe
-    ['#a1a1aa', '#71717a', '#52525b', '#3f3f46', '#27272a',], // zinc
-    ['#a3a3a3', '#737373', '#525252', '#404040', '#262626',], // neutral
-    ['#9ca3af', '#6b7280', '#4b5563', '#374151', '#1f2937',], // gray
-    ['#94a3b8', '#64748b', '#475569', '#334155', '#1e293b',], // slate
-    ['#a8a29e', '#78716c', '#57534e', '#44403c', '#292524',], // stone
-    ['#abab9c', '#7c7c67', '#5b5b4b', '#474739', '#2b2b22',], // olive
-    ['#a89ea9', '#79697b', '#594c5b', '#463947', '#2a212c',], // mauve
-    ['#9ca8ab', '#67787c', '#4b585b', '#394447', '#22292b',], // mist
-  ]
-
   const data = await fetchData(userId)
   const { totalByItemTypes, totalType } = data
 
@@ -59,200 +47,50 @@ const loadData = async (userId) => {
   const investment = Number(totalByItemTypes[2].amount_total).toFixed(2)
   const balance = (income - expense - investment).toFixed(2)
 
-  // Cards / KPIs
-  incomeText.innerHTML = "R$" + income
-  expenseText.innerHTML = "R$" + expense
-  investmentText.innerHTML = "R$" + investment
-  if (balance > 0)
-    balanceText.innerHTML = "R$" + balance
-  else 
-    balanceText.innerHTML = `<span class='value-red'>R$${balance}</span>`
+  const cards = [{
+    element: document.getElementById('incomeText'),
+    value: income,
+    react: false
+  },
+  {
+    element: document.getElementById('expenseText'),
+    value: expense,
+    react: false
+  },
+  {
+    element: document.getElementById('investmentText'),
+    value: investment,
+    react: false
+  },
+  {
+    element: document.getElementById('balanceText'),
+    value: balance,
+    react: true
+  }]
+  cards.forEach(card => loadCards(card.element, card.value, card.react))
 
-  // Income Sources Chart
-  const incomeSourcesCanva = document.getElementById("incomeSources")
-  const incomeLabels = []
-  const incomeData = []
-  const incomeColors = []
-
-  totalType.income.forEach(item => incomeLabels.push(item.category))
-  totalType.income.forEach(item => incomeData.push(item.amount_total))
-  
-  for(let i = 0; i < incomeLabels.length; i++) {
-    const rand = Math.floor(Math.random() * ((5 - 1) + 1))
-    incomeColors.push(colors[i % 8][rand])
-  }
-
-  new Chart(incomeSourcesCanva, {
+  const charts = [{
+    element: document.getElementById("incomeSources"),
     type: "doughnut",
-    data: {
-      labels: incomeLabels,
-      datasets: [{
-        label: "R$",
-        data: incomeData,
-        borderColor:'#5b4f4b',
-        backgroundColor: incomeColors,
-        borderWidth: 1
-      }]
-    },
-    options: {
-      responsive: true,
-      maintainAspectRatio: false,
-      animations: {
-        tension: {
-          duration: 2000,
-          easing: 'easeOutCubic',
-          from: 1,
-          to: 0,
-        }
-      },
-      plugins: {
-        title: {
-          display: true,
-          text: 'Fontes de renda',
-          align: 'center',
-          color: '#d8d2d0',
-          font: {
-            size: 20,
-            family: "'JetBrains Mono', monospace",
-            weight: 'lighter'
-          }
-        },
-        legend: {
-          labels: {
-            color: '#aba09c',
-            font: {
-              family: "'JetBrains Mono', monospace",
-              weight: 'normal'
-            }
-          }
-        }
-      }
-    }
-  })
-
-  // Expense Sources Chart
-  const expenseSourcesCanva = document.getElementById("expenseSources")
-  const expenseLabels = []
-  const expenseData = []
-  const expenseColors = []
-
-  totalType.expense.forEach(item => expenseLabels.push(item.category))
-  totalType.expense.forEach(item => expenseData.push(item.amount_total))
-
-  for(let i = 0; i < expenseLabels.length; i++) {
-    const rand = Math.floor(Math.random() * ((5 - 1) + 1))
-    expenseColors.push(colors[i % 8][rand])
-  }
-  
-  new Chart(expenseSourcesCanva, {
+    data: totalType.income,
+    label: "R$",
+    title: "Fontes de renda"
+  }, 
+  {
+    element: document.getElementById("expenseSources"),
     type: "doughnut",
-    data: {
-      labels: expenseLabels,
-      datasets: [{
-        label: "R$",
-        data: expenseData,
-        borderColor:'#5b4f4b',
-        backgroundColor: expenseColors,
-        borderWidth: 1
-      }]
-    },
-    options: {
-      responsive: true,
-      maintainAspectRatio: false,
-      animations: {
-        tension: {
-          duration: 2000,
-          easing: 'easeOutCubic',
-          from: 1,
-          to: 0,
-        }
-      },
-      plugins: {
-        title: {
-          display: true,
-          text: 'Gastos por categoria',
-          align: 'center',
-          color: '#d8d2d0',
-          font: {
-            size: 20,
-            family: "'JetBrains Mono', monospace",
-            weight: 'lighter'
-          }
-        },
-        legend: {
-          labels: {
-            color: '#aba09c',
-            font: {
-              family: "'JetBrains Mono', monospace",
-              weight: 'normal'
-            }
-          }
-        }
-      }
-    }
-  })
-
-  // Investment Sources Chart
-  const investmentSourcesCanva = document.getElementById("investmentSources")
-  const investmentLabels = []
-  const investmentData = []
-  const investmentColors = []
-
-  totalType.investment.forEach(item => investmentLabels.push(item.category))
-  totalType.investment.forEach(item => investmentData.push(item.amount_total))
-
-  for(let i = 0; i < investmentLabels.length; i++) {
-    const rand = Math.floor(Math.random() * ((5 - 1) + 1))
-    investmentColors.push(colors[i % 8][rand])
-  }
-  
-  new Chart(investmentSourcesCanva, {
+    data: totalType.expense,
+    label: "R$",
+    title: "Gastos por categoria"
+  },
+  {
+    element: document.getElementById("investmentSources"),
     type: "doughnut",
-    data: {
-      labels: investmentLabels,
-      datasets: [{
-        label: "R$",
-        data: investmentData,
-        borderColor:'#5b4f4b',
-        backgroundColor: investmentColors,
-        borderWidth: 1
-      }]
-    },
-    options: {
-      responsive: true,
-      maintainAspectRatio: false,
-      animations: {
-        tension: {
-          duration: 2000,
-          easing: 'easeOutCubic',
-          from: 1,
-          to: 0,
-        }
-      },
-      plugins: {
-        title: {
-          display: true,
-          text: 'Investimentos por categoria',
-          align: 'center',
-          color: '#d8d2d0',
-          font: {
-            size: 20,
-            family: "'JetBrains Mono', monospace",
-            weight: 'lighter'
-          }
-        },
-        legend: {
-          labels: {
-            color: '#aba09c',
-            font: {
-              family: "'JetBrains Mono', monospace",
-              weight: 'normal'
-            }
-          }
-        }
-      }
-    }
-  })
+    data: totalType.investment,
+    label: "R$",
+    title: "Investimentos por categoria"
+  },]
+  charts.forEach(chart => drawCharts(chart))
 
   // Transaction Moviment Chart
   const transactionMovementsCanva = document.getElementById("transactionMovements")
@@ -377,4 +215,92 @@ const fetchData = (userId) => {
   })
   .then(res => res.json())
   .then(data => data)
+}
+
+const loadCards = (element, amount, react = false) => {
+  if (react && amount <= 0)
+    element.innerHTML = `<span class='value-red'>R$${amount}</span>`
+  else 
+    element.innerHTML = "R$" + amount 
+}
+
+const drawCharts = (chart) => {
+  const labels = []
+  const data = []
+
+  chart.data.forEach(item => labels.push(item.category))
+  chart.data.forEach(item => data.push(item.amount_total))
+  const colors = getRandomColors(labels.length)
+
+  const config = {
+    type: chart.type,
+    data: {
+      labels,
+      datasets: [{
+        label: chart.label,
+        data,
+        borderColor:'#5b4f4b',
+        backgroundColor: colors,
+        borderWidth: 1
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      animations: {
+        tension: {
+          duration: 2000,
+          easing: 'easeOutCubic',
+          from: 1,
+          to: 0,
+        }
+      },
+      plugins: {
+        title: {
+          display: true,
+          text: chart.title,
+          align: 'center',
+          color: '#d8d2d0',
+          font: {
+            size: 20,
+            family: "'JetBrains Mono', monospace",
+            weight: 'lighter'
+          }
+        },
+        legend: {
+          labels: {
+            color: '#aba09c',
+            font: {
+              family: "'JetBrains Mono', monospace",
+              weight: 'normal'
+            }
+          }
+        }
+      }
+    }
+  }
+
+  new Chart(chart.element, config)
+}
+
+const getRandomColors = (quantity) => {
+    const colors = [
+    //['#aba09c', '#7c6d67', '#5b4f4b', '#473c39', '#2b2422',], // taupe
+    ['#a1a1aa', '#71717a', '#52525b', '#3f3f46', '#27272a',], // zinc
+    ['#a3a3a3', '#737373', '#525252', '#404040', '#262626',], // neutral
+    ['#9ca3af', '#6b7280', '#4b5563', '#374151', '#1f2937',], // gray
+    ['#94a3b8', '#64748b', '#475569', '#334155', '#1e293b',], // slate
+    ['#a8a29e', '#78716c', '#57534e', '#44403c', '#292524',], // stone
+    ['#abab9c', '#7c7c67', '#5b5b4b', '#474739', '#2b2b22',], // olive
+    ['#a89ea9', '#79697b', '#594c5b', '#463947', '#2a212c',], // mauve
+    ['#9ca8ab', '#67787c', '#4b585b', '#394447', '#22292b',], // mist
+  ]
+  const randColors = []
+
+  for(let i = 0; i < quantity; i++) {
+    const rand = Math.floor(Math.random() * ((5 - 1) + 1))
+    randColors.push(colors[i % 8][rand])
+  }
+
+  return randColors
 }
