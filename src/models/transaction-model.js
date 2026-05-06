@@ -6,14 +6,14 @@ const create = (user, name, category, type, amount, date, description) => {
   return database.execute(command)
 }
 
-const update = (id, name, category, type, amount, date, description) => {
-  const command = `update item set item_name = '${name}', item_category_id = ${category}, item_type_id = ${type}, amount = ${amount}, event_date = '${date}', item_description = '${description}', updated_at = current_timestamp where id = ${id}`
+const update = (user, id, name, category, type, amount, date, description) => {
+  const command = `update item set item_name = '${name}', item_category_id = ${category}, item_type_id = ${type}, amount = ${amount}, event_date = '${date}', item_description = '${description}', updated_at = current_timestamp where id = ${id} and user_id = ${user} and deleted_at is null`
 
   return database.execute(command)
 }
 
-const remove = (id) => {
-  const command = `update item set deleted_at = current_timestamp where id = ${id}`
+const remove = (user, id) => {
+  const command = `update item set deleted_at = current_timestamp where id = ${id} and user_id = ${user} and deleted_at is null`
 
   return database.execute(command)
 }
@@ -35,7 +35,6 @@ const getTotalTypeByItemCategories = (user, type) => {
 
   return database.execute(command)
 }
-// add created_at, updated_at and deleted_at in item_category
 
 module.exports = {
   create,

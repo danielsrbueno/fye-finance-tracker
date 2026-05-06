@@ -31,6 +31,7 @@ const create = (req, res) => {
 }
 
 const update = (req, res) => {
+  const user = req.body.userId
   const id = req.body.transactionId
   const name = req.body.transactionName
   const category = req.body.transactionCategoryId
@@ -39,6 +40,8 @@ const update = (req, res) => {
   const date = req.body.transactionDate
   const description = req.body.transactionDescription
 
+  if (!user)
+    return res.status(400).json({ message: "Id do usuário está undefined!" })
   if (!id)
     return res.status(400).json({ message: "Id da transação está undefined!" })
   if (!name)
@@ -52,7 +55,7 @@ const update = (req, res) => {
   if (!date)
     return res.status(400).json({ message: "Data da transação está undefined!" })
 
-  transactionModel.update(id, name, category, type, amount, date, description)
+  transactionModel.update(user, id, name, category, type, amount, date, description)
   .then(result => res.status(200).send(result))
   .catch(error => {
     console.log(error)
@@ -61,12 +64,15 @@ const update = (req, res) => {
 }
 
 const remove = (req, res) => {
+  const user = req.body.userId
   const id = req.body.transactionId
 
+  if (!user)
+    return res.status(400).json({ message: "Id do usuário está undefined!" })
   if (!id)
     return res.status(400).json({ message: "Id da transação está undefined!" })
 
-  transactionModel.remove(id)
+  transactionModel.remove(user, id)
   .then(result => res.status(200).send(result))
   .catch(error => {
     console.log(error)
