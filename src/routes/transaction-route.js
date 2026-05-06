@@ -15,6 +15,10 @@ router.delete("/remove", (req, res) => {
   transactionController.remove(req, res)
 })
 
+router.get('/all/:userId', (req, res) => {
+  transactionController.getAllByUser(req, res)
+})
+
 router.get('/:userId', (req, res) => {
   transactionController.getHomeChartsData(req, res)
 })
