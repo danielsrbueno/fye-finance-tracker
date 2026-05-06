@@ -304,3 +304,12 @@ const getRandomColors = (quantity) => {
 
   return randColors
 }
+
+const signOut = () => {
+  sessionStorage.removeItem("userEmail")
+  sessionStorage.removeItem("userName")
+  sessionStorage.removeItem("userId")
+  sessionStorage.removeItem("lastLogin")
+
+  window.location.href = '../login/index.html'
+}

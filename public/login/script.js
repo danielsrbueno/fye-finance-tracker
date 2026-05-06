@@ -24,12 +24,12 @@ const signIn = () => {
         sessionStorage.userEmail = json.email,
         sessionStorage.userName = json.user_name,
         sessionStorage.userId = json.id
-        sessionStorage.lastLoginDate = date.toLocaleString()
+        sessionStorage.lastLogin = date.toLocaleString()
 
         showToast("Login realizado com sucesso!", true)
         setTimeout(() => {
           window.location = "../app/index.html"
-        }, 3500)
+        }, 1500)
       })
     }
     else {
