@@ -19,19 +19,19 @@ const remove = (user, id) => {
 }
 
 const getAllByUser = (user) => {
-  const command = `select i.id, i.item_name, c.category, t.item_type, i.item_description, i.amount, i.event_date from item i left join item_category c on i.item_category_id = c.id left join item_type t on i.item_type_id = t.id where i.user_id = ${user} and deleted_at is null order by i.event_date`
+  const command = `select i.id, i.item_name, c.category, t.item_type, i.item_description, i.amount, i.event_date from item i left join item_category c on i.item_category_id = c.id left join item_type t on i.item_type_id = t.id where i.user_id = ${user} and i.deleted_at is null and c.deleted_at is null order by i.event_date`
 
   return database.execute(command)
 }
 
 const getTotalByItemTypes = (user) => {
-  const command = `select sum(i.amount) amount_total, t.item_type from item i join item_category c on i.item_category_id = c.id join item_type t on i.item_type_id = t.id where i.user_id = ${user} and i.deleted_at is null group by t.id`
+  const command = `select sum(i.amount) amount_total, t.item_type from item i join item_category c on i.item_category_id = c.id join item_type t on i.item_type_id = t.id where i.user_id = ${user} and i.deleted_at is null and c.deleted_at is null group by t.id`
 
   return database.execute(command)
 }
 
 const getTotalTypeByItemCategories = (user, type) => {
-  const command = `select sum(i.amount) amount_total, c.category from item i join item_category c on i.item_category_id = c.id join item_type t on i.item_type_id = t.id where i.user_id = ${user} and t.id = ${type} and i.deleted_at is null group by c.category`
+  const command = `select sum(i.amount) amount_total, c.category from item i join item_category c on i.item_category_id = c.id join item_type t on i.item_type_id = t.id where i.user_id = ${user} and t.id = ${type} and i.deleted_at is null and c.deleted_at group by c.category`
 
   return database.execute(command)
 }
