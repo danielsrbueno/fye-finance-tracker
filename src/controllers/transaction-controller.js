@@ -24,7 +24,14 @@ const create = (req, res) => {
     return res.status(400).json({ message: "Data da transação está undefined!" })
 
   transactionModel.create(user, name, category, type, amount, date, description)
-  .then(result => res.status(201).send(result))
+  .then(() => {
+    transactionModel.getLatestByUser(user)
+    .then(result => res.status(201).send(result))
+    .catch(error => {
+      console.log(error)
+      res.status(500).json({ message: "Algo deu errado. Tente novamente mais tarde."})
+    })
+  })
   .catch(error => {
     console.log(error)
     res.status(500).json({ message: "Algo deu errado. Tente novamente mais tarde."})

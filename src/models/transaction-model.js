@@ -36,11 +36,18 @@ const getTotalTypeByItemCategories = (user, type) => {
   return database.execute(command)
 }
 
+const getLatestByUser = (user) => {
+  const command = `select i.id, i.item_name, c.category, t.item_type, i.item_description, i.amount, i.event_date from item i left join item_category c on i.item_category_id = c.id left join item_type t on i.item_type_id = t.id where i.user_id = ${user} and i.deleted_at is null and c.deleted_at is null order by i.id desc limit 1;`
+
+  return database.execute(command)
+}
+
 module.exports = {
   create,
   update,
   remove,
   getAllByUser,
   getTotalByItemTypes,
-  getTotalTypeByItemCategories
+  getTotalTypeByItemCategories,
+  getLatestByUser
 }
