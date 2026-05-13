@@ -5,7 +5,6 @@ const create = (req, res) => {
   const user = req.body.userId
   const name = req.body.transactionName
   const category = req.body.transactionCategoryId
-  const type = req.body.transactionTypeId
   const amount = req.body.transactionAmount
   const date = req.body.transactionDate
   const description = req.body.transactionDescription
@@ -16,14 +15,12 @@ const create = (req, res) => {
     return res.status(400).json({ message: "Nome da transação está undefined!" })
   if (!category)
     return res.status(400).json({ message: "Categoria da transação está undefined!" })
-  if (!type)
-    return res.status(400).json({ message: "Tipo da transação está undefined!" })
   if (!amount)
     return res.status(400).json({ message: "Valor da transação está undefined!" })
   if (!date)
     return res.status(400).json({ message: "Data da transação está undefined!" })
 
-  transactionModel.create(user, name, category, type, amount, date, description)
+  transactionModel.create(user, name, category, amount, date, description)
   .then(() => {
     transactionModel.getLatestByUser(user)
     .then(result => res.status(201).send(result))
@@ -43,7 +40,6 @@ const update = (req, res) => {
   const id = req.body.transactionId
   const name = req.body.transactionName
   const category = req.body.transactionCategoryId
-  const type = req.body.transactionTypeId
   const amount = req.body.transactionAmount
   const date = req.body.transactionDate
   const description = req.body.transactionDescription
@@ -56,14 +52,12 @@ const update = (req, res) => {
     return res.status(400).json({ message: "Nome da transação está undefined!" })
   if (!category)
     return res.status(400).json({ message: "Categoria da transação está undefined!" })
-  if (!type)
-    return res.status(400).json({ message: "Tipo da transação está undefined!" })
   if (!amount)
     return res.status(400).json({ message: "Valor da transação está undefined!" })
   if (!date)
     return res.status(400).json({ message: "Data da transação está undefined!" })
 
-  transactionModel.update(user, id, name, category, type, amount, date, description)
+  transactionModel.update(user, id, name, category, amount, date, description)
   .then(result => res.status(200).send(result))
   .catch(error => {
     console.log(error)
@@ -90,15 +84,20 @@ const remove = (req, res) => {
 
 const getAllByUser = async (req, res) => {
   const user = req.params.userId
+  const { month, year } = req.query
 
   if (!user)
     return res.status(400).json({ message: "Id do usuário está undefined!" })
+  if (!month)
+    return res.status(400).json({ message: "Mês está undefined!" })
+  if (!year)
+    return res.status(400).json({ message: "Ano está undefined!" })
 
-  const items = await transactionModel.getAllByUser(user)
+  const items = await transactionModel.getAllByUser(user, month, year)
 
-  if (items.length === 0)
-    return res.status(204)
-
+  // if (items.length === 0)
+  //   return res.status(204)
+  console.log("chegou aq")
   const categories = await categoryModel.getAllByUser(user)
 
   const response = {
