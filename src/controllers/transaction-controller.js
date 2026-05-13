@@ -97,7 +97,6 @@ const getAllByUser = async (req, res) => {
 
   // if (items.length === 0)
   //   return res.status(204)
-  console.log("chegou aq")
   const categories = await categoryModel.getAllByUser(user)
 
   const response = {
@@ -121,13 +120,16 @@ const getHomeChartsData = async (req, res) => {
   const expense = await transactionModel.getTotalTypeByItemCategories(user, 2)
   const investment = await transactionModel.getTotalTypeByItemCategories(user, 3)
 
+  const moviments = await transactionModel.getMoviment(user)
+  
   const response = {
     totalByItemTypes,
     totalType: {
       income,
       expense,
       investment
-    }
+    },
+    moviments
   }
 
   return res.status(200).send(response)

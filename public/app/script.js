@@ -1,8 +1,9 @@
+const userEmail = sessionStorage.getItem("userEmail")
+const userName = sessionStorage.getItem("userName")
+const userId = sessionStorage.getItem("userId")
+let movimentData = {}
+
 const init = () => {
-  const userEmail = sessionStorage.getItem("userEmail")
-  const userName = sessionStorage.getItem("userName")
-  const userId = sessionStorage.getItem("userId")
-  
   if (!userEmail || !userName || !userId)
     window.location.href = "../login/index.html"
 
@@ -40,7 +41,10 @@ const init = () => {
 
 const loadData = async (userId) => {
   const data = await fetchData(userId)
-  const { totalByItemTypes, totalType } = data
+  console.log(data)
+  const { totalByItemTypes, totalType, moviments } = data
+  movimentData = moviments
+  showHeatmap()
 
   const income = Number(totalByItemTypes[0].amount_total).toFixed(2)
   const expense = Number(totalByItemTypes[1].amount_total).toFixed(2)
@@ -91,48 +95,6 @@ const loadData = async (userId) => {
     title: "Investimentos por categoria"
   },]
   charts.forEach(chart => drawCharts(chart))
-
-  // Transaction Moviment Chart
-  const transactionMovementsCanva = document.getElementById("transactionMovements")
-
-  new Chart(transactionMovementsCanva, {
-    type: 'matrix',
-    data: {
-      datasets: [{
-        label: 'Movimentação',
-        data: [
-          {x: 1, y: 1}, {x: 2, y: 1}, {x: 3, y: 1}, {x: 4, y: 1}, {x: 5, y: 1}, {x: 6, y: 1}, {x: 7, y: 1},
-          {x: 1, y: 2}, {x: 2, y: 2}, {x: 3, y: 2}, {x: 4, y: 2}, {x: 5, y: 2}, {x: 6, y: 2}, {x: 7, y: 2},
-          {x: 1, y: 3}, {x: 2, y: 3}, {x: 3, y: 3}, {x: 4, y: 3}, {x: 5, y: 3}, {x: 6, y: 3}, {x: 7, y: 3},
-          {x: 1, y: 4}, {x: 2, y: 4}, {x: 3, y: 4}, {x: 4, y: 4}, {x: 5, y: 4}, {x: 6, y: 4}, {x: 7, y: 4}
-        ],
-        borderWidth: 1,
-        borderColor: 'rgba(0,0,0,0.5)',
-        backgroundColor: 'rgba(251, 146, 60, 0.1)',
-        width: ({chart}) => (chart.chartArea || {}).width / 7 - 1,
-        height: ({chart}) => (chart.chartArea || {}).height / 4 - 1,
-      }],
-    },
-    options: {
-      scales: {
-        x: { display: false, min: 0.5, max: 7.5, offset: false },
-        y: { display: false, min: 0.5, max: 4.5 },
-      },
-      plugins: {
-        title: {
-          display: true,
-          text: 'Movimentação nos últimos 28 dias',
-          align: 'center',
-          color: '#d8d2d0',
-          font: {
-            size: 20,
-            family: "'JetBrains Mono', monospace",
-            weight: 'lighter'
-          }
-        },
-      }
-    },
-  })
 
   // Financial Health Chart
   const financialHealthCanva = document.getElementById("financialHealth")
@@ -312,4 +274,68 @@ const signOut = () => {
   sessionStorage.removeItem("lastLogin")
 
   window.location.href = '../login/index.html'
+}
+
+const showHeatmap = () => {
+  const calendarElement = document.getElementById("calendar")
+  
+  const monthLimitDays = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31] // adicionar ano bissexto
+
+  calendarElement.innerHTML = ""
+  for (let i = 0; i < monthLimitDays[0]; i++) {
+    calendarElement.innerHTML += `
+      <div 
+        class='day' 
+        id='day-${i +1}' 
+        onmouseover='showCalendarCaption(${i +1})' 
+        onmouseout='cleanCalendarCaption()'
+      >
+        <p class='day-number mono'>${i +1}</p>
+      </div>
+    `
+  }
+
+  let max = 0, min = 0
+  movimentData.forEach(day => {
+    Number(day.total) > max ? max = Number(day.total) : null
+  })
+
+  movimentData.forEach(day => {
+    Number(day.total) < min ? min = Number(day.total) : null
+  })
+
+  console.log(max, min)
+
+  movimentData.forEach(day => {
+    let opacity = 0.1
+    if (day.total < 0) 
+      opacity = Math.abs(day.total) / Math.abs(min)
+    if (day.total > 0) 
+      opacity = day.total / max
+    if (opacity < 0.1)
+      opacity = 0.1
+
+    let color = "#aba09c"
+    if (day.total < 0) color = "#c2410c"
+    if (day.total> 0) color = "#10b981"
+
+    const dayElement = document.getElementById(`day-${Number(day.event_day)}`)
+    dayElement.style.backgroundColor = color
+    dayElement.style.opacity = opacity
+    dayElement.classList.add(`amount-${day.total}`)
+  })
+
+}
+
+const showCalendarCaption = (day) => {
+  const captionElement = document.getElementById("calendarCaption")
+  const dayIndex = movimentData.map((item, i) => item.event_day == day ? i : -1)
+  .filter(number => number != -1)[0]
+  
+  captionElement.innerText = `Dia ${day}: R$${dayIndex == undefined ? 0 : movimentData[dayIndex].total}`
+}
+
+const cleanCalendarCaption = () => {
+  const captionElement = document.getElementById("calendarCaption")
+  captionElement.innerText = ""
 }

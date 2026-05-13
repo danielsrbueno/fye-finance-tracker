@@ -1,3 +1,4 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&family=Noto+Serif+Display:ital,wght@0,100..900;1,100..900&display=swap');
 :root {
   --font-inter-sans: 'Inter', sans-serif;
   --font-jetbrains-mono: 'JetBrains Mono', monospace;
@@ -380,18 +381,66 @@ ul {
   gap: 0.5rem;
 }
 
-.chart-section .chart-row .chart-box {
+.chart-section .chart-row .chart-box  {
   flex: 1;
   border-radius: 0.25rem;
   background-color: var(--color-taupe-700);
   border: 1px solid var(--color-taupe-600);
   padding: 0.5rem;
+  width: 100%;
   height: 23rem;
   display: flex;
   align-items: center;
   justify-content: center;
   position: relative;
 }
+
+.chart-section .chart-row .chart-box .chart-title {
+  position: absolute;
+  top: 0.5rem;
+  font-size: 20px;
+  font-weight: 500;
+  color: var(--color-taupe-300);
+}
+
+.chart-section .chart-row .chart-box #calendar {
+  display: grid;
+  padding: 1rem;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 4px;
+  position: relative;
+  background: var(--color-taupe-800);
+  border-radius: 0.725rem;
+}
+
+.chart-section #calendar .day {
+  width: 38px;
+  height: 38px;
+  border-radius: 2px;
+  background: var(--color-taupe-400);
+  transition: all 150ms;
+  opacity: .1;
+  position: relative;
+}
+
+.chart-section #calendar .day .day-number{
+  position: absolute;
+  bottom: 1px;
+  right: 1px;
+}
+
+.chart-section #calendar .day:hover {
+  opacity: 1 !important;
+}
+
+.chart-section .chart-row .chart-box .chart-caption {
+  position: absolute;
+  bottom: 0.5rem;
+  font-size: 18px;
+  font-weight: 400;
+  color: var(--color-taupe-300);
+}
+
 
 .chart-section .chart-box #healthPercentage {
   position: absolute;

@@ -12,7 +12,6 @@
     href="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.1/src/bold/style.css" />
   <script src="script.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/chartjs-chart-matrix@2"></script>
 </head>
 <body class="page-body" onload="init()">
 
@@ -35,7 +34,7 @@
           <i class="ph-bold ph-house-simple icon"></i>
           <p>Visão geral</p>
         </div>
-        <div class="sidebar-item inactive">
+        <div class="sidebar-item inactive" onclick="window.location.href='transactions/index.html'">
           <i class="ph-bold ph-plus icon-sm"></i>
           <p>Transações</p>
         </div>
@@ -107,8 +106,10 @@
     <section class="chart-section">
       <div class="chart-row">
         <div class="chart-box">
-          <canvas id="transactionMovements"></canvas>
-          <p id="soon" class="mono">Disponível em breve</p>
+          <h1 class="chart-title mono">Movimentação por dia</h1>
+          <div id="calendar">
+          </div>
+          <p class="chart-caption mono" id="calendarCaption"></h1>
         </div>
         <div class="chart-box">
           <canvas id="financialHealth"></canvas>

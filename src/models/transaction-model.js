@@ -19,13 +19,13 @@ const remove = (user, id) => {
 }
 
 const getAllByUser = (user, month, year) => {
-  const command = `select i.id, i.item_name, c.category, t.item_type, i.item_description, i.amount, i.event_date from item i left join item_category c on i.item_category_id = c.id left join item_type t on c.item_type_id = t.id where i.user_id = ${user} and i.event_date like '${year}-${month}-%' and i.deleted_at is null and c.deleted_at is null order by i.event_date`
+  const command = `select i.id, i.item_name, c.category, i.item_description, i.amount, i.event_date from item i left join item_category c on i.item_category_id = c.id left join item_type t on c.item_type_id = t.id where i.user_id = ${user} and i.event_date like '${year}-${month}-%' and i.deleted_at is null and c.deleted_at is null order by i.event_date`
 
   return database.execute(command)
 }
 
 const getTotalByItemTypes = (user) => {
-  const command = `select sum(i.amount) amount_total, t.item_type from item i join item_category c on i.item_category_id = c.id join item_type t on c.item_type_id = t.id where i.user_id = ${user} and i.deleted_at is null and c.deleted_at is null group by t.id`
+  const command = `select sum(i.amount) amount_total from item i join item_category c on i.item_category_id = c.id join item_type t on c.item_type_id = t.id where i.user_id = ${user} and i.deleted_at is null and c.deleted_at is null group by t.id`
 
   return database.execute(command)
 }
@@ -36,8 +36,26 @@ const getTotalTypeByItemCategories = (user, type) => {
   return database.execute(command)
 }
 
+const getMoviment = (user) => {
+  const command = `
+    select sum(
+      case
+        when c.item_type_id = 1 then i.amount
+        else i.amount * -1
+        end
+    ) as total,
+    right(i.event_date, 2) as event_day
+    from item i 
+    join item_category c on i.item_category_id = c.id
+    where i.user_id = '${user}' and c.user_id = '${user}' and c.item_type_id in (1,2) and i.deleted_at is null and c.deleted_at is null
+    group by event_day;
+  `
+
+  return database.execute(command)
+}
+
 const getLatestByUser = (user) => {
-  const command = `select i.id, i.item_name, c.category, t.item_type, i.item_description, i.amount, i.event_date from item i left join item_category c on i.item_category_id = c.id left join item_type t on c.item_type_id = t.id where i.user_id = ${user} and i.deleted_at is null and c.deleted_at is null order by i.id desc limit 1;`
+  const command = `select i.id, i.item_name, c.category, i.item_description, i.amount, i.event_date from item i left join item_category c on i.item_category_id = c.id left join item_type t on c.item_type_id = t.id where i.user_id = ${user} and i.deleted_at is null and c.deleted_at is null order by i.id desc limit 1;`
 
   return database.execute(command)
 }
@@ -49,5 +67,6 @@ module.exports = {
   getAllByUser,
   getTotalByItemTypes,
   getTotalTypeByItemCategories,
-  getLatestByUser
+  getLatestByUser,
+  getMoviment
 }
