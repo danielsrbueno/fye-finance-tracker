@@ -67,6 +67,7 @@ ul {
 
 .serif {
   font-family: var(--font-noto-serif);
+  line-height: 2.2rem;
 }
 
 .link {
@@ -232,7 +233,7 @@ ul {
 .hero-section .hero-subtitle {
   color: rgba(251, 250, 249, 0.5);
   font-size: 1.25rem;
-  margin: 0;
+  margin: 0.5rem 0 0 0;
 }
 
 .hero-buttons {
@@ -244,8 +245,7 @@ ul {
 .problem-section {
   max-width: 80rem;
   min-height: 90dvh;
-  margin-left: auto;
-  margin-right: auto;
+  margin: 8rem auto;
   display: flex;
   align-items: center;
   flex-direction: column;
@@ -359,7 +359,7 @@ ul {
   text-align: center;
   color: var(--color-taupe-300);
   padding-bottom: 1rem;
-  margin: 0;
+  margin: 0.5rem 0 0 0;
 }
 
 .solution-section .row {
@@ -450,6 +450,7 @@ ul {
   background-clip: text;
   -webkit-text-fill-color: transparent;
   color: transparent;
+  line-height: 5rem;
 }
 
 .dashboard-frame {
