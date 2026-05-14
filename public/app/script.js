@@ -150,7 +150,7 @@ const loadData = async (userId) => {
           font: {
             size: 20,
             family: "'JetBrains Mono', monospace",
-            weight: 'lighter'
+            weight: 400
           }
         },
         legend: {
@@ -226,7 +226,7 @@ const drawCharts = (chart) => {
           font: {
             size: 20,
             family: "'JetBrains Mono', monospace",
-            weight: 'lighter'
+            weight: 400
           }
         },
         legend: {
