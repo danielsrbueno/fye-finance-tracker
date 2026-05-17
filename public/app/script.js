@@ -290,6 +290,7 @@ const drawCharts = (chart) => {
   chartsInstances[chart.element.id] = new Chart(chart.element, config)
 }
 
+const usedColors = []
 const getRandomColors = (quantity) => {
     const colors = [
     ['#aba09c', '#7c6d67', '#5b4f4b', '#473c39', '#2b2422',], // taupe
@@ -302,12 +303,19 @@ const getRandomColors = (quantity) => {
     ['#94a3b8', '#64748b', '#475569', '#334155', '#1e293b',], // slate
     ['#a1a1aa', '#71717a', '#52525b', '#3f3f46', '#27272a',], // zinc
   ]
-  const randColors = []
+  if (usedColors.length == 45)
+    usedColors.splice(0, usedColors.length)
 
+  const randColors = []
   for(let i = 0; i < quantity; i++) {
     const randRow = Math.floor(Math.random() * 9)
     const randCol = Math.floor(Math.random() * 5)
-    randColors.push(colors[randRow][randCol])
+    if (!usedColors.includes(colors[randRow][randCol])) {
+      usedColors.push(colors[randRow][randCol])
+      randColors.push(colors[randRow][randCol])
+    }
+    else 
+      quantity++
   }
 
   return randColors
