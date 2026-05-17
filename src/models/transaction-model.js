@@ -24,19 +24,19 @@ const getAllByUser = (user, month, year) => {
   return database.execute(command)
 }
 
-const getTotalByItemTypes = (user) => {
-  const command = `select sum(i.amount) amount_total from item i join item_category c on i.item_category_id = c.id join item_type t on c.item_type_id = t.id where i.user_id = ${user} and i.deleted_at is null and c.deleted_at is null group by t.id`
+const getTotalByItemTypes = (user, month, year) => {
+  const command = `select sum(i.amount) amount_total from item i join item_category c on i.item_category_id = c.id join item_type t on c.item_type_id = t.id where i.user_id = ${user} and i.event_date like '${year}-${month}-%' and i.deleted_at is null and c.deleted_at is null group by t.id`
 
   return database.execute(command)
 }
 
-const getTotalTypeByItemCategories = (user, type) => {
-  const command = `select sum(i.amount) amount_total, c.category from item i join item_category c on i.item_category_id = c.id join item_type t on c.item_type_id = t.id where i.user_id = ${user} and t.id = ${type} and i.deleted_at is null and c.deleted_at is null group by c.category`
+const getTotalTypeByItemCategories = (user, type, month, year) => {
+  const command = `select sum(i.amount) amount_total, c.category from item i join item_category c on i.item_category_id = c.id join item_type t on c.item_type_id = t.id where i.user_id = ${user} and t.id = ${type} and i.event_date like '${year}-${month}-%' and i.deleted_at is null and c.deleted_at is null group by c.category`
 
   return database.execute(command)
 }
 
-const getMoviment = (user) => {
+const getMoviment = (user, month, year) => {
   const command = `
     select sum(
       case
@@ -47,7 +47,7 @@ const getMoviment = (user) => {
     right(i.event_date, 2) as event_day
     from item i 
     join item_category c on i.item_category_id = c.id
-    where i.user_id = '${user}' and c.user_id = '${user}' and c.item_type_id in (1,2) and i.deleted_at is null and c.deleted_at is null
+    where i.user_id = '${user}' and c.user_id = '${user}' and c.item_type_id in (1,2) and i.event_date like '${year}-${month}-%' and i.deleted_at is null and c.deleted_at is null
     group by event_day;
   `
 

@@ -2,21 +2,24 @@ const userEmail = sessionStorage.getItem("userEmail")
 const userName = sessionStorage.getItem("userName")
 const userId = sessionStorage.getItem("userId")
 let movimentData = {}
+let chartsInstances = {}
+let financialHealthChart = null
 
 const init = () => {
   if (!userEmail || !userName || !userId)
     window.location.href = "../login/index.html"
-
-  const months = ["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"]
-  const currentDate =  new Date()
-
+  
+  const currentDate = new Date()
+  
   const hour = currentDate.getHours()
-  const day = currentDate.getDate()
-  const month = currentDate.getMonth()
-  const year = currentDate.getFullYear()
-
+  if(!(localStorage.getItem("month") && localStorage.getItem("year"))) {
+    const currentDate = new Date()
+    localStorage.setItem("month", (currentDate.getMonth()).toString())
+    localStorage.setItem("year", (currentDate.getFullYear()).toString())
+  }
+  
   let getting = ""
-
+  
   if (hour < 6)
     getting = "Boa madrugada"
   else if (hour < 12)
@@ -25,30 +28,51 @@ const init = () => {
     getting = "Boa tarde"
   else
     getting = "Boa noite"
-
+  
   const userNames = userName.split(" ")
   const firstName = userNames[0]
   const lastName = userNames[userNames.length -1]
-
+  
   gettingText.innerHTML = getting
-  dateText.innerHTML = `${(day < 10 ? "0" : "") + day} . ${months[month]} . ${year}`
   greetingUserName.innerHTML = `${firstName} ${lastName}!`
   sidebarUserName.innerHTML = `${firstName} ${lastName}`
   sidebarAvatar.innerHTML = `${firstName[0]}${lastName[0]}`
-
-  loadData(userId)
+  
+  changeMonth(0)
 }
 
-const loadData = async (userId) => {
-  const data = await fetchData(userId)
-  console.log(data)
+const changeMonth = async (counter) => {
+  const months = ["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"]
+
+  let month = Number(localStorage.getItem("month"))
+  let year = Number(localStorage.getItem("year"))
+
+  if (counter == 1 && month + 1 > 11) {
+    month = 0
+    year += 1
+  } else if (counter == -1 && month - 1 < 0) {
+    month = 11
+    year -= 1
+  } else {
+    month += counter
+  }
+
+  localStorage.setItem("month", month.toString())
+  localStorage.setItem("year", year.toString())
+  
+  dateText.innerHTML = `${months[month]} | ${year}`
+  const data = await fetchData()
+
+  if (data === 204)
+    return window.location.href = "./not-found.html"
+
   const { totalByItemTypes, totalType, moviments } = data
   movimentData = moviments
   showHeatmap()
 
-  const income = Number(totalByItemTypes[0].amount_total).toFixed(2)
-  const expense = Number(totalByItemTypes[1].amount_total).toFixed(2)
-  const investment = Number(totalByItemTypes[2].amount_total).toFixed(2)
+  const income = typeof totalByItemTypes[0] == "undefined" ? "0.00" : Number(totalByItemTypes[0].amount_total).toFixed(2)
+  const expense = typeof totalByItemTypes[1] == "undefined" ? "0.00" : Number(totalByItemTypes[1].amount_total).toFixed(2)
+  const investment = typeof totalByItemTypes[2] == "undefined" ? "0.00" : Number(totalByItemTypes[2].amount_total).toFixed(2)
   const balance = (income - expense - investment).toFixed(2)
 
   const cards = [{
@@ -115,7 +139,11 @@ const loadData = async (userId) => {
   const healthColor = healthColors[Math.abs((financialHealthPoints / 10) -1).toFixed()]
   healthPercentage.innerHTML = `<p style='color: ${healthColor}'>${financialHealthPoints}%</p>`
 
-  new Chart(financialHealthCanva, {
+  if (financialHealthChart) {
+    financialHealthChart.destroy()
+  }
+
+  financialHealthChart = new Chart(financialHealthCanva, {
     type: "doughnut",
     data: {
       datasets: [{
@@ -168,15 +196,28 @@ const loadData = async (userId) => {
   })
 }
 
-const fetchData = (userId) => {
-  return fetch(`/transaction/${userId}`, {
+const fetchData = () => {
+  const month = Number(localStorage.getItem("month"))
+  const year = Number(localStorage.getItem("year"))
+
+  return fetch(`/transaction/${userId}?month=${(month < 9 ? "0" : "") + (month + 1)}&year=${year}`, {
     method: "GET",
     headers: {
       "Content-Type": "application/json"
     },
   })
-  .then(res => res.json())
-  .then(data => data)
+  .then(res => {
+    if (res.status === 200) {
+      return res.json()
+      .then(data => data)
+    }
+
+    if (res.status === 204) {
+      return res.status
+    }
+
+  })
+  
 }
 
 const loadCards = (element, amount, react = false) => {
@@ -193,6 +234,10 @@ const drawCharts = (chart) => {
   chart.data.forEach(item => labels.push(item.category))
   chart.data.forEach(item => data.push(item.amount_total))
   const colors = getRandomColors(labels.length)
+
+  if (chartsInstances[chart.element.id]) {
+    chartsInstances[chart.element.id].destroy()
+  }
 
   const config = {
     type: chart.type,
@@ -242,12 +287,12 @@ const drawCharts = (chart) => {
     }
   }
 
-  new Chart(chart.element, config)
+  chartsInstances[chart.element.id] = new Chart(chart.element, config)
 }
 
 const getRandomColors = (quantity) => {
     const colors = [
-    //['#aba09c', '#7c6d67', '#5b4f4b', '#473c39', '#2b2422',], // taupe
+    ['#aba09c', '#7c6d67', '#5b4f4b', '#473c39', '#2b2422',], // taupe
     ['#9ca8ab', '#67787c', '#4b585b', '#394447', '#22292b',], // mist
     ['#a8a29e', '#78716c', '#57534e', '#44403c', '#292524',], // stone
     ['#a89ea9', '#79697b', '#594c5b', '#463947', '#2a212c',], // mauve
@@ -260,8 +305,9 @@ const getRandomColors = (quantity) => {
   const randColors = []
 
   for(let i = 0; i < quantity; i++) {
-    const rand = Math.floor(Math.random() * ((5 - 1) + 1))
-    randColors.push(colors[i % 8][rand])
+    const randRow = Math.floor(Math.random() * 9)
+    const randCol = Math.floor(Math.random() * 5)
+    randColors.push(colors[randRow][randCol])
   }
 
   return randColors
@@ -277,12 +323,26 @@ const signOut = () => {
 }
 
 const showHeatmap = () => {
+  const month = Number(localStorage.getItem("month"))
+  const year = Number(localStorage.getItem("year"))
+
   const calendarElement = document.getElementById("calendar")
   
-  const monthLimitDays = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31] // adicionar ano bissexto
+  const monthLimitDays = [31, year % 4 == 0 ? 29 : 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31] // adicionar ano bissexto
+
+  const gapDays = new Date(year, month, 1).getDay()
 
   calendarElement.innerHTML = ""
-  for (let i = 0; i < monthLimitDays[0]; i++) {
+  for (let i = 0; i < gapDays; i++) {
+    calendarElement.innerHTML += `
+      <div 
+      >
+        <p class='day-number mono'></p>
+      </div>
+    `
+  }
+  
+  for (let i = 0; i < monthLimitDays[month] ; i++) {
     calendarElement.innerHTML += `
       <div 
         class='day' 
@@ -304,8 +364,6 @@ const showHeatmap = () => {
     Number(day.total) < min ? min = Number(day.total) : null
   })
 
-  console.log(max, min)
-
   movimentData.forEach(day => {
     let opacity = 0.1
     if (day.total < 0) 
@@ -324,7 +382,6 @@ const showHeatmap = () => {
     dayElement.style.opacity = opacity
     dayElement.classList.add(`amount-${day.total}`)
   })
-
 }
 
 const showCalendarCaption = (day) => {

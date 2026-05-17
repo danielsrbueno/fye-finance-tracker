@@ -10,6 +10,8 @@
     href="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.1/src/regular/style.css" />
   <link rel="stylesheet" type="text/css"
     href="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.1/src/bold/style.css" />
+    <link rel="stylesheet" type="text/css"
+    href="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.1/src/fill/style.css" />
   <script src="script.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
@@ -58,7 +60,11 @@
         <div class="greeting-name serif" id="greetingUserName">Daniel Bueno!</div>
       </h1>
       <p class="greeting-sub mono">Seja bem-vindo ao seu <span class="highlight">Finance Tracker.</span></p>
-      <p class="date-badge mono" id="dateText"></p>
+      <div class="date-badge">
+        <i class="ph-fill ph-arrow-circle-left" onclick="changeMonth(-1)"></i>
+        <p class="mono" id="dateText"></p>
+        <i class="ph-fill ph-arrow-circle-right" onclick="changeMonth(1)"></i>
+      </div>
     </section>
 
     <section class="summary-cards">
@@ -105,13 +111,13 @@
 
     <section class="chart-section">
       <div class="chart-row">
-        <div class="chart-box">
+        <div class="chart-box tall">
           <h1 class="chart-title mono">Movimentação por dia</h1>
           <div id="calendar">
           </div>
           <p class="chart-caption mono" id="calendarCaption"></h1>
         </div>
-        <div class="chart-box">
+        <div class="chart-box tall">
           <canvas id="financialHealth"></canvas>
           <div id="healthPercentage" class="mono"></div>
         </div>

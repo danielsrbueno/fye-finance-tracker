@@ -16,29 +16,17 @@
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <style>
-  .main-content {
-    align-items: center;
-    justify-content: center;
-  }
-
   .main-content > div {
     font-size: 2rem;
     max-width: 50rem;
     text-align: center;
+    margin: auto;
   }
 
   .main-content > div > span {
     font-weight: 900;
-  }
-
-  .main-content > div > .transactions {
-    font-weight: 900;
     color: #ea580c;
     cursor: pointer;
-  }
-
-  .main-content > div > .ops {
-    opacity: .3;
   }
 
   .button-outline {
@@ -54,14 +42,19 @@
     background: none;
     color: inherit;
     font-size: 1rem;
+    margin: 1rem auto;
   }
 
   .button-outline:hover {
     opacity: 1;
     background-color: rgba(251, 250, 249, 0.15);
   }
+
+  .greeting-section {
+    position: absolute;
+  }
 </style>
-<body class="page-body" onload="init()">
+<body class="page-body">
 
   <aside class="sidebar">
 
@@ -99,11 +92,54 @@
   </aside>
 
   <main class="main-content mono">
-    <div><span class="ops">Ops...</span> Você ainda não tem nenhuma transação neste mês. Acesse a página de <span class="transactions" onclick="goToTransactionsPage()">Transações</span> para criar transações e categorias.</div>
-    <button class="button-outline" onclick="goToTransactionsPage()">Acessar agora</button>
+    <section class="greeting-section">
+      <div class="date-badge">
+        <i class="ph-fill ph-arrow-circle-left" onclick="goToMainDashboard(-1)"></i>
+        <p class="mono" id="dateText"></p>
+        <i class="ph-fill ph-arrow-circle-right" onclick="goToMainDashboard(1)"></i>
+      </div>
+    </section>
+    <div>
+      Você ainda não tem nenhuma transação neste mês. Acesse a página de <span class="transactions" onclick="goToTransactionsPage()">Transações</span> para criar transações e categorias.
+      <button class="button-outline" onclick="goToTransactionsPage()">Acessar agora</button>
+    </div>
   </main>
 </body>
 </html>
 <script>
   const goToTransactionsPage = () => window.location.href = "./transactions/index.html"
+  const goToMainDashboard = (counter) => {
+    changeMonth2(counter)
+    window.location.href = "./index.html"
+  }
+
+  const changeMonth2 = (counter) => {
+    const months = ["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"]
+    const currentDate = new Date()
+  
+    if(!(localStorage.getItem("month") && localStorage.getItem("year"))) {
+      const currentDate = new Date()
+      localStorage.setItem("month", (currentDate.getMonth()).toString())
+      localStorage.setItem("year", (currentDate.getFullYear()).toString())
+    }
+    let month = Number(localStorage.getItem("month"))
+    let year = Number(localStorage.getItem("year"))
+
+    if (counter == 1 && month + 1 > 11) {
+      month = 0
+      year += 1
+    } else if (counter == -1 && month - 1 < 0) {
+      month = 11
+      year -= 1
+    } else {
+      month += counter
+    }
+
+    localStorage.setItem("month", month.toString())
+    localStorage.setItem("year", year.toString())
+    
+    dateText.innerHTML = `${months[month]} | ${year}`
+  }
+
+  changeMonth2(0)
 </script>

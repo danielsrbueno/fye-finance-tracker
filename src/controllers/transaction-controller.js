@@ -109,18 +109,23 @@ const getAllByUser = async (req, res) => {
 
 const getHomeChartsData = async (req, res) => {
   const user = req.params.userId
+  const { month, year } = req.query
 
   if (!user)
     return res.status(400).json({ message: "Id do usuário está undefined!" })
-
+  if (!month)
+    return res.status(400).json({ message: "Mês está undefined!" })
+  if (!year)
+    return res.status(400).json({ message: "Ano está undefined!" })
+  
   // é preciso usar o try/catch para tratar erros, porém ainda não foi passado em nenhuma api ou pelo professor
-  const totalByItemTypes = await transactionModel.getTotalByItemTypes(user)
+  const totalByItemTypes = await transactionModel.getTotalByItemTypes(user, month, year)
 
-  const income = await transactionModel.getTotalTypeByItemCategories(user, 1)
-  const expense = await transactionModel.getTotalTypeByItemCategories(user, 2)
-  const investment = await transactionModel.getTotalTypeByItemCategories(user, 3)
+  const income = await transactionModel.getTotalTypeByItemCategories(user, 1, month, year)
+  const expense = await transactionModel.getTotalTypeByItemCategories(user, 2, month, year)
+  const investment = await transactionModel.getTotalTypeByItemCategories(user, 3, month, year)
 
-  const moviments = await transactionModel.getMoviment(user)
+  const moviments = await transactionModel.getMoviment(user, month, year)
   
   const response = {
     totalByItemTypes,
@@ -131,6 +136,9 @@ const getHomeChartsData = async (req, res) => {
     },
     moviments
   }
+  
+  if (moviments.length === 0)
+    return res.status(204).send()
 
   return res.status(200).send(response)
 }

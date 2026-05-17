@@ -3,7 +3,6 @@ const userName = sessionStorage.getItem("userName")
 const userId = sessionStorage.getItem("userId")
 
 let localData = {}
-let month, year
 
 const typeValues = {
   "INCOME": 1,
@@ -28,10 +27,11 @@ const init = () => {
   sidebarUserName.innerHTML = `${firstName} ${lastName}`
   sidebarAvatar.innerHTML = `${firstName[0]}${lastName[0]}`
 
-  const currentDate = new Date()
-
-  month = currentDate.getMonth()
-  year = currentDate.getFullYear()
+  if(!(localStorage.getItem("month") && localStorage.getItem("year"))) {
+    const currentDate = new Date()
+    localStorage.setItem("month", (currentDate.getMonth()).toString())
+    localStorage.setItem("year", (currentDate.getFullYear()).toString())
+  }
 
   changeMonth(0)
 }
@@ -39,6 +39,9 @@ const init = () => {
 const changeMonth = async (counter) => {
   const transactionsElement = document.getElementById("transactions")
   const months = ["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"]
+
+  let month = Number(localStorage.getItem("month"))
+  let year = Number(localStorage.getItem("year"))
 
   if (counter == 1 && month + 1 > 11) {
     month = 0
@@ -50,6 +53,9 @@ const changeMonth = async (counter) => {
     month += counter
   }
   
+  localStorage.setItem("month", month.toString())
+  localStorage.setItem("year", year.toString())
+
   dateText.innerHTML = `${months[month]} | ${year}`
   localData = await fetchData()
   const { items, categories } = localData
@@ -69,6 +75,9 @@ const loadData = async () => {
 }
 
 const fetchData = () => {
+  const month = Number(localStorage.getItem("month"))
+  const year = Number(localStorage.getItem("year"))
+
   return fetch(`/transaction/all/${userId}?month=${(month < 9 ? "0" : "") + (month + 1)}&year=${year}`, {
     method: "GET",
     headers: {

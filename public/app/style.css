@@ -249,21 +249,30 @@ ul {
   text-shadow: 0 4px 6px rgba(234, 88, 12, 0.3);
 }
 
-.main-content .greeting-section .date-badge {
+.main-content .date-badge {
   position: absolute;
   color: var(--color-taupe-300);
   top: 1rem;
   right: 1rem;
-  padding: 0.375rem 0.75rem;
-  padding-top: 0.375rem;
+  padding: 0rem 0.75rem;
   border-radius: 9999px;
   background-color: var(--color-taupe-700);
   border: 1px solid var(--color-taupe-600);
-  opacity: 0.8;
   box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
 }
 
-.main-content .greeting-section .date-badge:hover {
+.main-content .date-badge i {
+  font-size: 1.725rem;
+  opacity: 0.8;
+  cursor: pointer;
+  transition: all 150ms;
+}
+
+.main-content .date-badge i:hover {
   opacity: 1;
 }
 
@@ -395,6 +404,10 @@ ul {
   align-items: center;
   justify-content: center;
   position: relative;
+}
+
+.chart-section .chart-row .tall {
+  height: 28rem;
 }
 
 .chart-section .chart-row .chart-box .chart-title {
