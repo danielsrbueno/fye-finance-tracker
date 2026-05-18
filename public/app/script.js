@@ -135,9 +135,12 @@ const changeMonth = async (counter) => {
     '#16a34a' 
   ]
 
-  const financialHealthPoints = (100 - ((expense / income) * 100)).toFixed() // está muito simples, precisa ser melhorado
+  const financialHealthInvestmentFormula = (investment / income) * 0.3
+  const financialHealthExpenseFormula = ((income - expense) / income) * 0.7
+  const financialHealthPoints = (100 - (financialHealthInvestmentFormula + financialHealthExpenseFormula) * 100).toFixed()
   const healthColor = healthColors[Math.abs((financialHealthPoints / 10) -1).toFixed()]
   healthPercentage.innerHTML = `<p style='color: ${healthColor}'>${financialHealthPoints}%</p>`
+  financialHealthMessage.innerHTML = getFinancialHealthMessage(income, expense, investment, financialHealthPoints)
 
   if (financialHealthChart) {
     financialHealthChart.destroy()
@@ -218,6 +221,43 @@ const fetchData = () => {
 
   })
   
+}
+
+const getFinancialHealthMessage = (income, expense, investment, financialHealthPoints) => {
+  let message = ""
+
+  const investmentRate = investment / income
+  const expenseRate = expense / income
+  const balance = income - expense
+
+  if (expense > income)
+    message = "Você está gastando mais do que ganha."
+
+  else if (balance <= 0)
+    message = "Você terminou o mês sem sobras financeiras."
+
+  else if (investment === 0 && balance > 0)
+    message = "Você possui sobra mensal, mas ainda não investe."
+
+  else if (investmentRate < 0.05)
+    message = "Sua taxa de investimento ainda está baixa."
+
+  else if (investmentRate >= 0.05 && investmentRate < 0.15)
+    message = "Você já começou a investir. Continue evoluindo."
+
+  else if (investmentRate >= 0.15 && investmentRate < 0.25)
+    message = "Boa taxa de investimento. Seus hábitos são saudáveis."
+
+  else if (investmentRate >= 0.25)
+    message = "Excelente taxa de investimento. Você está construindo patrimônio."
+
+  if (expenseRate >= 0.9)
+    message += " Seus gastos estão muito altos."
+
+  if (expenseRate <= 0.5)
+    message += " Você mantém um ótimo controle de gastos."
+
+  return message
 }
 
 const loadCards = (element, amount, react = false) => {

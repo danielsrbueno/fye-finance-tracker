@@ -470,26 +470,23 @@ ul {
   color: var(--color-taupe-300);
 }
 
+.chart-section .chart-row .financial-health-container {
+  padding: 1rem 0 5rem 0;
+}
+
+.chart-section .chart-box #financialHealthMessage {
+  position: absolute;
+  bottom: 0;
+  padding: 0 1rem;
+  text-align: center;
+  opacity: 80%;
+  font-size: 0.9rem;
+}
 
 .chart-section .chart-box #healthPercentage {
   position: absolute;
   font-size: 4rem;
   font-weight: 400;
-  top: 29%;
+  top: 25%;
   opacity: 80%;
-}
-
-.chart-section .chart-box #soon {
-  position: absolute;
-  font-size: 2rem;
-  font-weight: 400;
-  color: var(--color-taupe-300);
-  width: 100%;
-  height: 100%;
-  background: var(--color-taupe-800);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  opacity: 80%;
-  border-radius: 0.25rem;
 }
