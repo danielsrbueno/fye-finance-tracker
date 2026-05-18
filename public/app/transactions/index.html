@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>App | Fye</title>
-  <link rel="shortcut icon" href="../assets/images/logo/logo-64.ico" type="image/x-icon">
+  <link rel="shortcut icon" href="../../assets/images/logo/logo-64.ico" type="image/x-icon">
   <link rel="stylesheet" href="style.css">
   <link rel="stylesheet" type="text/css"
     href="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.1/src/regular/style.css" />
@@ -13,9 +13,8 @@
     <link rel="stylesheet" type="text/css"
     href="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.1/src/fill/style.css" />
   <script src="script.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
-<body class="page-body" onload="init()">
+<body class="page-body" id="body" onload="init()">
 
   <aside class="sidebar">
 
@@ -32,11 +31,11 @@
 
       <div class="sidebar-nav-group">
         <h2 class="sidebar-group-label mono">Dashboards</h2>
-        <div class="sidebar-item active">
+        <div class="sidebar-item inactive" onclick="window.location.href='../index.html'">
           <i class="ph-bold ph-house-simple icon"></i>
           <p>Visão geral</p>
         </div>
-        <div class="sidebar-item inactive" onclick="window.location.href='transactions/index.html'">
+        <div class="sidebar-item active">
           <i class="ph-bold ph-plus icon-sm"></i>
           <p>Transações</p>
         </div>
@@ -54,86 +53,87 @@
 
   <main class="main-content">
 
-    <section class="greeting-section">
-      <h1 class="greeting-title">
-        <span id="gettingText">Boa noite</span>,
-        <div class="greeting-name serif" id="greetingUserName">Daniel Bueno!</div>
-      </h1>
-      <p class="greeting-sub mono">Seja bem-vindo ao seu <span class="highlight">Finance Tracker.</span></p>
+    <header>
+      <h1 class="page-title serif">Transações</h1>
+      <div class="show-category" onclick="showCategoryDialog()">
+        <i class="ph-bold ph-pencil-simple"></i>
+        <p class="mono">Editar categorias</p>
+      </div>
       <div class="date-badge">
         <i class="ph-fill ph-arrow-circle-left" onclick="changeMonth(-1)"></i>
         <p class="mono" id="dateText"></p>
         <i class="ph-fill ph-arrow-circle-right" onclick="changeMonth(1)"></i>
       </div>
-    </section>
-
-    <section class="summary-cards">
-
-      <div class="card">
-        <i class="ph-bold ph-trend-up icon emerald"></i>
-        <h2 class="label mono">Receita</h2>
-        <h1 id="incomeText" class="value value-emerald mono"></h1>
+      
+    </header> 
+    <div class="form-col">
+      <p class="sub-title mono">Cadastrar transação</p>
+      <div class="form-row">
+        <input type="text" class="form-input mono flex-3" placeholder="Nome da transação" id="inpName">
+        <input type="number" class="form-input mono flex-1" placeholder="R$" id="inpAmount">
+        <input type="date" class="form-input mono flex-2" id="inpEventDate">
+        <select class="form-input mono flex-2" id="sctType" onblur="updateCategoryOptions()">
+          <option value="" disabled selected>Tipo</option>
+          <option value="1">Renda</option>
+          <option value="2">Gasto</option>
+          <option value="3">Investimento</option>
+        </select>
+        <select class="form-input mono flex-2" id="sctCategory">
+          <option value="" disabled selected>Categoria</option>
+        </select>
       </div>
-
-      <div class="card">
-        <i class="ph-bold ph-receipt icon orange"></i>
-        <h2 class="label mono">Gastos</h2>
-        <h1 id="expenseText" class="value value-orange mono"></h1>
+      <div class="form-row">
+        <input type="text" class="form-input mono flex-3" placeholder="Descrição (opcional)" id="inpDescription">
+        <button class="form-btn mono flex-1" onclick="createTransaction()">Cadastrar</button>
       </div>
+    </div>
 
-      <div class="card">
-        <i class="ph-bold ph-piggy-bank icon slate"></i>
-        <h2 class="label mono">Investido</h2>
-        <h1 id="investmentText" class="value value-slate mono"></h1>
+    <div class="form-col">
+      <p class="sub-title mono"><i class="ph-bold ph-list-dashes"></i>Ordenar por:</p>
+      <div class="buttons">
+        <button class="button mono flex-1 active">Data</button>
+        <button class="button mono flex-1">Categoria</button>
+        <button class="button mono flex-1">Tipo</button>
+        <button class="button mono flex-1">Valor</button>
+        <button class="button mono flex-1">Nome</button>
+        <div class="vertical-divisor"></div>
+        <button class="button mono flex-1 active">Decrescente</button>
       </div>
-
-      <div class="card">
-        <i class="ph-bold ph-hand-coins icon taupe"></i>
-        <h2 class="label mono">Saldo</h2>
-        <h1 id="balanceText" class="value value-taupe mono"></h1>
+      <div class="divisor"></div>
+      <p class="sub-title mono"><i class="ph-bold ph-funnel"></i>Filtrar por:</p>
+      <div class="buttons">
+        <button class="button mono flex-1">Renda</button>
+        <button class="button mono flex-1">Gasto</button>
+        <button class="button mono flex-1">Investimento</button>
+        <div class="vertical-divisor"></div>
+        <button class="button mono flex-1">Categoria</button>
       </div>
+    </div>
 
-    </section>
-
-    <section class="chart-section">
-      <div class="chart-row">
-        <div class="chart-box">
-          <canvas id="incomeSources"></canvas>
-        </div>
-        <div class="chart-box">
-          <canvas id="expenseSources"></canvas>
-        </div>
-        <div class="chart-box">
-          <canvas id="investmentSources"></canvas>
-        </div>
-      </div>
-    </section>
-
-    <section class="chart-section">
-      <div class="chart-row">
-        <div class="chart-box tall">
-          <h1 class="chart-title mono">Movimentação por dia</h1>
-          <span class="days-week mono">
-            <p class="day-week">dom</p>
-            <p class="day-week">seg</p>
-            <p class="day-week">ter</p>
-            <p class="day-week">qua</p>
-            <p class="day-week">qui</p>
-            <p class="day-week">sex</p>
-            <p class="day-week">sab</p>
-          </span>
-          <div id="calendar">
-          </div>
-          <p class="chart-caption mono" id="calendarCaption"></h1>
-        </div>
-        <div class="chart-box financial-health-container tall">
-          <canvas id="financialHealth"></canvas>
-          <div id="healthPercentage" class="mono"></div>
-          <p class="mono" id="financialHealthMessage"></p>
-        </div>
-      </div>
-    </section>
-
+    <div class="transactions-col" id="transactions">
+    </div>
   </main>
+  <div class="category-overlay hidden" id="categoryOverlay">
+    <div class="category-dialog hidden" id="categoryDialog">
+      <i class="ph-bold ph-x" onclick="showCategoryDialog()"></i>
+      <h1 class="title serif">Categorias</h1>
+      <div class="form-col">
+        <p class="sub-title mono">Criar categoria</p>
+        <div class="form-row">
+          <input type="text" class="form-input mono flex-3" placeholder="Nome da categoria" id="inpCategoryName">
+          <select class="form-input mono flex-1" id="sctCategoryType">
+            <option value="" disabled selected>Tipo</option>
+            <option value="1">Renda</option>
+            <option value="2">Gasto</option>
+            <option value="3">Investimento</option>
+          </select>
+          <button class="form-btn mono" onclick="createCategory()">Criar</button>
+        </div>
+      </div>
+      <div class="transactions-col" id="categories">
+      </div>
+    </div>
+  </div>
+  <div class="toast mono" id="toast"><i class="ph-bold"></i></div>
 </body>
 </html>

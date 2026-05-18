@@ -15,7 +15,46 @@
   <script src="script.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
-<body class="page-body" onload="init()">
+<style>
+  .main-content > div {
+    font-size: 2rem;
+    max-width: 50rem;
+    text-align: center;
+    margin: auto;
+  }
+
+  .main-content > div > span {
+    font-weight: 900;
+    color: #ea580c;
+    cursor: pointer;
+  }
+
+  .button-outline {
+    border: 1px solid var(--color-taupe-50);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    cursor: pointer;
+    opacity: 0.8;
+    transition: opacity 150ms, background-color 150ms;
+    padding: 0.7rem 1rem;
+    border-radius: 9999px;
+    background: none;
+    color: inherit;
+    font-size: 1rem;
+    margin: 1rem auto;
+  }
+
+  .button-outline:hover {
+    opacity: 1;
+    background-color: rgba(251, 250, 249, 0.15);
+  }
+
+  .greeting-section {
+    position: absolute;
+  }
+</style>
+<body class="page-body">
 
   <aside class="sidebar">
 
@@ -52,88 +91,55 @@
 
   </aside>
 
-  <main class="main-content">
-
+  <main class="main-content mono">
     <section class="greeting-section">
-      <h1 class="greeting-title">
-        <span id="gettingText">Boa noite</span>,
-        <div class="greeting-name serif" id="greetingUserName">Daniel Bueno!</div>
-      </h1>
-      <p class="greeting-sub mono">Seja bem-vindo ao seu <span class="highlight">Finance Tracker.</span></p>
       <div class="date-badge">
-        <i class="ph-fill ph-arrow-circle-left" onclick="changeMonth(-1)"></i>
+        <i class="ph-fill ph-arrow-circle-left" onclick="goToMainDashboard(-1)"></i>
         <p class="mono" id="dateText"></p>
-        <i class="ph-fill ph-arrow-circle-right" onclick="changeMonth(1)"></i>
+        <i class="ph-fill ph-arrow-circle-right" onclick="goToMainDashboard(1)"></i>
       </div>
     </section>
-
-    <section class="summary-cards">
-
-      <div class="card">
-        <i class="ph-bold ph-trend-up icon emerald"></i>
-        <h2 class="label mono">Receita</h2>
-        <h1 id="incomeText" class="value value-emerald mono"></h1>
-      </div>
-
-      <div class="card">
-        <i class="ph-bold ph-receipt icon orange"></i>
-        <h2 class="label mono">Gastos</h2>
-        <h1 id="expenseText" class="value value-orange mono"></h1>
-      </div>
-
-      <div class="card">
-        <i class="ph-bold ph-piggy-bank icon slate"></i>
-        <h2 class="label mono">Investido</h2>
-        <h1 id="investmentText" class="value value-slate mono"></h1>
-      </div>
-
-      <div class="card">
-        <i class="ph-bold ph-hand-coins icon taupe"></i>
-        <h2 class="label mono">Saldo</h2>
-        <h1 id="balanceText" class="value value-taupe mono"></h1>
-      </div>
-
-    </section>
-
-    <section class="chart-section">
-      <div class="chart-row">
-        <div class="chart-box">
-          <canvas id="incomeSources"></canvas>
-        </div>
-        <div class="chart-box">
-          <canvas id="expenseSources"></canvas>
-        </div>
-        <div class="chart-box">
-          <canvas id="investmentSources"></canvas>
-        </div>
-      </div>
-    </section>
-
-    <section class="chart-section">
-      <div class="chart-row">
-        <div class="chart-box tall">
-          <h1 class="chart-title mono">Movimentação por dia</h1>
-          <span class="days-week mono">
-            <p class="day-week">dom</p>
-            <p class="day-week">seg</p>
-            <p class="day-week">ter</p>
-            <p class="day-week">qua</p>
-            <p class="day-week">qui</p>
-            <p class="day-week">sex</p>
-            <p class="day-week">sab</p>
-          </span>
-          <div id="calendar">
-          </div>
-          <p class="chart-caption mono" id="calendarCaption"></h1>
-        </div>
-        <div class="chart-box financial-health-container tall">
-          <canvas id="financialHealth"></canvas>
-          <div id="healthPercentage" class="mono"></div>
-          <p class="mono" id="financialHealthMessage"></p>
-        </div>
-      </div>
-    </section>
-
+    <div>
+      Você ainda não tem nenhuma transação neste mês. Acesse a página de <span class="transactions" onclick="goToTransactionsPage()">Transações</span> para criar transações e categorias.
+      <button class="button-outline" onclick="goToTransactionsPage()">Acessar agora</button>
+    </div>
   </main>
 </body>
 </html>
+<script>
+  const goToTransactionsPage = () => window.location.href = "./transactions/index.html"
+  const goToMainDashboard = (counter) => {
+    changeMonth2(counter)
+    window.location.href = "./index.html"
+  }
+
+  const changeMonth2 = (counter) => {
+    const months = ["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"]
+    const currentDate = new Date()
+  
+    if(!(localStorage.getItem("month") && localStorage.getItem("year"))) {
+      const currentDate = new Date()
+      localStorage.setItem("month", (currentDate.getMonth()).toString())
+      localStorage.setItem("year", (currentDate.getFullYear()).toString())
+    }
+    let month = Number(localStorage.getItem("month"))
+    let year = Number(localStorage.getItem("year"))
+
+    if (counter == 1 && month + 1 > 11) {
+      month = 0
+      year += 1
+    } else if (counter == -1 && month - 1 < 0) {
+      month = 11
+      year -= 1
+    } else {
+      month += counter
+    }
+
+    localStorage.setItem("month", month.toString())
+    localStorage.setItem("year", year.toString())
+    
+    dateText.innerHTML = `${months[month]} | ${year}`
+  }
+
+  changeMonth2(0)
+</script>

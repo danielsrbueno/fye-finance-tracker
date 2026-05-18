@@ -1,3 +1,4 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&family=Noto+Serif+Display:ital,wght@0,100..900;1,100..900&display=swap');
 :root {
   --font-inter-sans: 'Inter', sans-serif;
   --font-jetbrains-mono: 'JetBrains Mono', monospace;
@@ -94,7 +95,6 @@ ul {
   box-shadow: 0 10px 15px -3px var(--color-taupe-950),
     0 4px 6px -4px var(--color-taupe-950);
   border-radius: 0 0.75rem 0.75rem 0;
-  justify-content: space-between;
 }
 
 .sidebar .header-logo {
@@ -135,7 +135,7 @@ ul {
 
 .sidebar .sidebar-nav .sidebar-item {
   border-radius: 0.375rem;
-  font-weight: 500;
+  font-weight: 400;
   font-size: 1.125rem;
   padding: 0.75rem 1.5rem;
   transition: opacity 150ms ease-in;
@@ -164,7 +164,7 @@ ul {
 }
 
 .sidebar .sidebar-nav .icon-sm {
-  font-size: 1.25rem;
+  font-size: 1.4rem;
 }
 
 .sidebar-user {
@@ -172,17 +172,13 @@ ul {
   background-color: rgba(243, 241, 241, 0.15);
   font-weight: 500;
   font-size: 1.125rem;
-  opacity: 0.85;
   padding: 0.75rem 0.25rem;
-  transition: opacity 150ms;
-  cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: space-around;
-}
-
-.sidebar-user:hover {
-  opacity: 1;
+  position: absolute;
+  width: calc(100% - 3rem);
+  bottom: 1.5rem;
 }
 
 .sidebar-user .avatar {
@@ -201,6 +197,13 @@ ul {
 
 .sidebar-user .icon {
   font-size: 1.5rem;
+  cursor: pointer;
+  transition: opacity 150ms;
+  opacity: 80%;
+}
+
+.sidebar-user .icon:hover {
+  opacity: 100%;
 }
 
 /* Main Section */
@@ -229,6 +232,7 @@ ul {
   font-weight: 800;
   color: var(--color-orange-600);
   font-size: 3rem;
+  line-height: 2.5rem;
   text-shadow: 0 4px 6px rgba(234, 88, 12, 0.6);
 }
 
@@ -236,6 +240,7 @@ ul {
   color: var(--color-taupe-300);
   letter-spacing: -0.05em;
   text-shadow: 0 4px 6px rgba(124, 109, 103, 0.5);
+  margin-top: -1rem;
 }
 
 .main-content .greeting-section .greeting-sub .highlight {
@@ -244,21 +249,30 @@ ul {
   text-shadow: 0 4px 6px rgba(234, 88, 12, 0.3);
 }
 
-.main-content .greeting-section .date-badge {
+.main-content .date-badge {
   position: absolute;
   color: var(--color-taupe-300);
   top: 1rem;
   right: 1rem;
-  padding: 0.375rem 0.75rem;
-  padding-top: 0.375rem;
+  padding: 0rem 0.75rem;
   border-radius: 9999px;
   background-color: var(--color-taupe-700);
   border: 1px solid var(--color-taupe-600);
-  opacity: 0.8;
   box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
 }
 
-.main-content .greeting-section .date-badge:hover {
+.main-content .date-badge i {
+  font-size: 1.725rem;
+  opacity: 0.8;
+  cursor: pointer;
+  transition: all 150ms;
+}
+
+.main-content .date-badge i:hover {
   opacity: 1;
 }
 
@@ -329,7 +343,7 @@ ul {
   left: 1.5rem;
   color: var(--color-taupe-300);
   letter-spacing: -0.025em;
-  font-weight: 100;
+  font-weight: 400;
 }
 
 .summary-cards .card .value {
@@ -378,12 +392,13 @@ ul {
   gap: 0.5rem;
 }
 
-.chart-section .chart-row .chart-box {
+.chart-section .chart-row .chart-box  {
   flex: 1;
   border-radius: 0.25rem;
   background-color: var(--color-taupe-700);
   border: 1px solid var(--color-taupe-600);
   padding: 0.5rem;
+  width: 100%;
   height: 23rem;
   display: flex;
   align-items: center;
@@ -391,25 +406,87 @@ ul {
   position: relative;
 }
 
+.chart-section .chart-row .tall {
+  height: 28rem;
+  flex-direction: column;
+}
+
+.chart-section .chart-row .chart-box .chart-title {
+  position: absolute;
+  top: 0.5rem;
+  font-size: 20px;
+  font-weight: 400;
+  color: var(--color-taupe-300);
+}
+
+.chart-section .chart-row .chart-box .days-week {
+  display: flex;
+  gap: 4px;
+  margin-bottom: -3rem;
+  padding-left: 8px;
+  z-index: 1;
+}
+
+.chart-section .chart-row .chart-box .day-week {
+  width: 38px;
+  opacity: .4;
+}
+
+.chart-section .chart-row .chart-box #calendar {
+  display: grid;
+  padding: 2.8rem 1rem 1rem 1rem;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 4px;
+  position: relative;
+  background: var(--color-taupe-800);
+  border-radius: 0.725rem;
+}
+
+.chart-section #calendar .day {
+  width: 38px;
+  height: 38px;
+  border-radius: 2px;
+  background: var(--color-taupe-400);
+  transition: all 150ms;
+  opacity: .1;
+  position: relative;
+}
+
+.chart-section #calendar .day .day-number{
+  position: absolute;
+  bottom: 1px;
+  right: 1px;
+}
+
+.chart-section #calendar .day:hover {
+  opacity: 1 !important;
+}
+
+.chart-section .chart-row .chart-box .chart-caption {
+  position: absolute;
+  bottom: 0.5rem;
+  font-size: 18px;
+  font-weight: 400;
+  color: var(--color-taupe-300);
+}
+
+.chart-section .chart-row .financial-health-container {
+  padding: 1rem 0 5rem 0;
+}
+
+.chart-section .chart-box #financialHealthMessage {
+  position: absolute;
+  bottom: 0;
+  padding: 0 1rem;
+  text-align: center;
+  opacity: 80%;
+  font-size: 0.9rem;
+}
+
 .chart-section .chart-box #healthPercentage {
   position: absolute;
   font-size: 4rem;
   font-weight: 400;
-  top: 29%;
+  top: 25%;
   opacity: 80%;
-}
-
-.chart-section .chart-box #soon {
-  position: absolute;
-  font-size: 2rem;
-  font-weight: 400;
-  color: var(--color-taupe-300);
-  width: 100%;
-  height: 100%;
-  background: var(--color-taupe-800);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  opacity: 80%;
-  border-radius: 0.25rem;
 }

@@ -25,7 +25,7 @@ const register = () => {
         showToast("Conta cadastrada com sucesso! Faça login para acessá-la.", true)
         setTimeout(() => {
           window.location = "../login/index.html"
-        }, 3500)
+        }, 1500)
       })
     }
     else {

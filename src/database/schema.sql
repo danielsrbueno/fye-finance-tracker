@@ -1,7 +1,7 @@
-drop database if exists fye_fye_fintrack;
+drop database if exists fye_fintrack;
 create database if not exists fye_fintrack;
 
-create table if not exists fye_fintrack.users (
+create table if not exists fye_fintrack.user (
 	id int auto_increment,
   user_name varchar (60) not null,
   email varchar(255) not null unique,
@@ -14,28 +14,33 @@ create table if not exists fye_fintrack.users (
   primary key (id)
 );
 
-create table if not exists fye_fintrack.item_categories (
-	user_id int,
-	id int auto_increment,
-  category varchar(60),
-  
-  primary key (id)
-);
-
-create table if not exists fye_fintrack.item_types (
+create table if not exists fye_fintrack.item_type (
 	id int auto_increment,
   item_type varchar(60),
   
   primary key (id)
 );
 
-create table if not exists fye_fintrack.items (
+create table if not exists fye_fintrack.item_category (
+	user_id int,
+	id int auto_increment,
+  category varchar(60),
+  item_type_id int not null,
+
+  created_at datetime not null default current_timestamp,
+  updated_at datetime,
+  deleted_at datetime,
+  
+  primary key (id),
+  foreign key (item_type_id) references item_type(id)
+);
+
+create table if not exists fye_fintrack.item (
 	id int auto_increment,
 	user_id int not null,
     
 	item_name varchar(60) not null,
   item_category_id int not null,
-  item_type_id int not null,
   item_description text,
   
   amount decimal(10,2) not null,
@@ -46,13 +51,12 @@ create table if not exists fye_fintrack.items (
   deleted_at datetime,
   
   primary key (id),
-  foreign key (user_id) references users(id),
-  foreign key (item_category_id) references item_categories(id),
-  foreign key (item_type_id) references item_types(id),
+  foreign key (user_id) references user(id),
+  foreign key (item_category_id) references item_category(id),
   index idx_user (user_id)
 );
 
-insert into fye_fintrack.item_types (item_type) 
+insert into fye_fintrack.item_type (item_type) 
   values
     ("INCOME"),
     ("EXPENSE"),
