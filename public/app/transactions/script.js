@@ -90,7 +90,7 @@ const fetchData = () => {
 
 const showItem = (item, categories) => {
   const transactionsElement = document.getElementById("transactions")
-  const { id, item_name, amount, event_date, category, item_description } = item
+  const { id, item_name, amount, event_date, category, item_description, is_recurring } = item
 
   const categoryInfos = categories.filter(ctg => ctg.category == category)[0]
 
@@ -104,7 +104,7 @@ const showItem = (item, categories) => {
   const structure = `
     <div class="transaction-row" id='item_${id}'>
       <div class="options-container hidden" id="item_options_${id}">
-        <div class="option"><i class="ph-bold ph-flag" oncliconsck="markAsCurring(${id})"></i>Marcar como recorrente</div>
+        <div class="option recurring-${is_recurring}" id="item_recurreng_${id}" onclick="markAsRecurring(${id})"><i class="ph-bold ph-${is_recurring === 1 ? "x" : "flag"}"></i>${is_recurring === 1 ? "Desmarcar" : "Marcar"} como recorrente</div>
         <div class="option color-red" onclick="deleteTransaction(${id})"><i class="ph-bold ph-trash"></i>Excluir</div>
       </div>
       <div class="show-options" id="show_options_${id}" onclick="showOptions(${id})">
@@ -144,6 +144,47 @@ const showItem = (item, categories) => {
     </div>
   `
   transactionsElement.innerHTML += structure
+}
+
+const markAsRecurring = (elementId) => {
+  const { items, categories } = localData
+
+  const item = items.filter(item => item.id == elementId)[0]
+
+  const currentCategory = categories.filter(category => category.category == item.category)[0]
+  let categoryId = currentCategory ? currentCategory.id : 0
+  
+  console.log(item)
+  const body = {
+    userId: Number(userId),
+    transactionId: Number(item.id),
+    transactionName: (item.item_name).trim(),
+    transactionCategoryId: Number(categoryId),
+    transactionAmount: Number(item.amount),
+    transactionDate: item.event_date.split("T")[0],
+    transactionDescription: item.item_description,
+    transactionIsRecurring: item.is_recurring === 0 ? 1 : 0
+  }
+
+  fetch("/transaction/update", {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(body)
+    })
+      .then(res => {
+        if (res.ok){
+          const element = document.getElementById(`item_recurreng_${elementId}`)
+          const is_recurring = body.transactionIsRecurring
+          element.innerHTML = `<i class="ph-bold ph-${is_recurring === 0 ? "flag" : "x"}"></i>${is_recurring === 0 ? "Marcar" : "Desmarcar"} como recorrente`
+
+          setItem(body)
+        }
+        else
+          showToast("Erro ao atualizar transação.", "error")
+      })
+      .catch(err => showToast("Erro ao atualizar transação.", "error"))
 }
 
 const showOptions = (elementId) => {
@@ -263,7 +304,7 @@ const compareItem = (item, value, inputType, category="") => {
 }
 
 const setItem = (body) => {
-  const { transactionName, transactionCategoryId, transactionTypeId, transactionAmount, transactionDate, transactionDescription } = body
+  const { transactionName, transactionCategoryId, transactionAmount, transactionDate, transactionDescription, transactionIsRecurring } = body
 
   const transactionId = (body.transactionId || -1)
   
@@ -274,10 +315,10 @@ const setItem = (body) => {
     id: transactionId,
     item_name: transactionName,
     category: getCategoryById(transactionCategoryId),
-    item_type: typeId[transactionTypeId],
     amount: transactionAmount,
     event_date: transactionDate,
-    item_description: transactionDescription
+    item_description: transactionDescription,
+    is_recurring: transactionIsRecurring
   }
 }
 
