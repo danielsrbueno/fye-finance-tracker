@@ -85,6 +85,10 @@ values
   (1, 'Reserva de Emergência', 3),
   (1, 'Criptomoedas', 3);
 
+insert fintrack.user (user_name, email, passwd)
+values
+  ("Daniel Bueno", "daniel@danbueno.com", "hash123");
+
 insert into fintrack.item (
   user_id,
   item_name,
