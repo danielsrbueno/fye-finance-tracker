@@ -70,9 +70,9 @@ const changeMonth = async (counter) => {
   movimentData = moviments
   showHeatmap()
 
-  const income = typeof totalByItemTypes[0] == "undefined" ? "0.00" : Number(totalByItemTypes[0].amount_total).toFixed(2)
-  const expense = typeof totalByItemTypes[2] == "undefined" ? "0.00" : Number(totalByItemTypes[2].amount_total).toFixed(2)
-  const investment = typeof totalByItemTypes[1] == "undefined" ? "0.00" : Number(totalByItemTypes[1].amount_total).toFixed(2)
+  const income = typeof totalByItemTypes.income === "undefined" ? "0.00" : Number(totalByItemTypes.income.amount_total).toFixed(2)
+  const expense = typeof totalByItemTypes.expense === "undefined" ? "0.00" : Number(totalByItemTypes.expense.amount_total).toFixed(2)
+  const investment = typeof totalByItemTypes.investment === "undefined" ? "0.00" : Number(totalByItemTypes.investment.amount_total).toFixed(2)
   const balance = (income - expense - investment).toFixed(2)
 
   const cards = [{
