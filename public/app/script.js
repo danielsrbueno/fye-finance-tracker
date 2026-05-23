@@ -71,8 +71,8 @@ const changeMonth = async (counter) => {
   showHeatmap()
 
   const income = typeof totalByItemTypes[0] == "undefined" ? "0.00" : Number(totalByItemTypes[0].amount_total).toFixed(2)
-  const expense = typeof totalByItemTypes[1] == "undefined" ? "0.00" : Number(totalByItemTypes[1].amount_total).toFixed(2)
-  const investment = typeof totalByItemTypes[2] == "undefined" ? "0.00" : Number(totalByItemTypes[2].amount_total).toFixed(2)
+  const expense = typeof totalByItemTypes[2] == "undefined" ? "0.00" : Number(totalByItemTypes[2].amount_total).toFixed(2)
+  const investment = typeof totalByItemTypes[1] == "undefined" ? "0.00" : Number(totalByItemTypes[1].amount_total).toFixed(2)
   const balance = (income - expense - investment).toFixed(2)
 
   const cards = [{
@@ -137,7 +137,7 @@ const changeMonth = async (counter) => {
 
   const financialHealthInvestmentFormula = (investment / income) * 0.3
   const financialHealthExpenseFormula = ((income - expense) / income) * 0.7
-  const financialHealthPoints = (100 - (financialHealthInvestmentFormula + financialHealthExpenseFormula) * 100).toFixed()
+  const financialHealthPoints = ((financialHealthInvestmentFormula + financialHealthExpenseFormula) * 100).toFixed()
   const healthColor = healthColors[Math.abs((financialHealthPoints / 10) -1).toFixed()]
   healthPercentage.innerHTML = `<p style='color: ${healthColor}'>${financialHealthPoints}%</p>`
   financialHealthMessage.innerHTML = getFinancialHealthMessage(income, expense, investment, financialHealthPoints)
