@@ -165,6 +165,9 @@ const changeMonth = async (counter) => {
       cutout: '85%',
       responsive: true,
       maintainAspectRatio: false,
+      animation: {
+        duration: 1200
+      },
       plugins: {
         title: {
           display: true,
@@ -269,10 +272,15 @@ const drawCharts = (chart) => {
   const colors = getRandomColors(labels.length)
 
   if (chartsInstances[chart.element.id]) {
-    chartsInstances[chart.element.id].destroy()
+    chartsInstances[chart.element.id].data.labels = labels
+    chartsInstances[chart.element.id].data.datasets[0].data = data
+    chartsInstances[chart.element.id].update()
+    return
   }
 
-  const config = {
+  // const config = 
+
+  chartsInstances[chart.element.id] = new Chart(chart.element, {
     type: chart.type,
     data: {
       labels,
@@ -287,6 +295,9 @@ const drawCharts = (chart) => {
     options: {
       responsive: true,
       maintainAspectRatio: false,
+      animation: {
+        duration: 1200
+      },
       plugins: {
         title: {
           display: true,
@@ -310,9 +321,7 @@ const drawCharts = (chart) => {
         }
       }
     }
-  }
-
-  chartsInstances[chart.element.id] = new Chart(chart.element, config)
+  })
 }
 
 const usedColors = []
