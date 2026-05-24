@@ -515,7 +515,7 @@ ul {
 .transaction-row:has(select option[value="1"]:checked),
 .transaction-row:has(select option[value="1"]:checked) .divisor,
 .transaction-row:has(select option[value="1"]:checked) .vertical-divisor{
-  border-color: var(--color-emerald-400);
+  border-color: var(--color-emerald-400) !important;
 }
 
 .transaction-row:has(select option[value="1"]:checked) .form-input,
@@ -531,7 +531,7 @@ ul {
 
 .transaction-row:has(select option[value="2"]:checked) .form-input,
 .transaction-row:has(select option[value="2"]:checked) p {
-  color: var(--color-orange-400) !important;
+  color: var(--color-orange-400);
 }
 
 .transaction-row:has(select option[value="3"]:checked),
@@ -542,7 +542,7 @@ ul {
 
 .transaction-row:has(select option[value="3"]:checked) .form-input,
 .transaction-row:has(select option[value="3"]:checked) p {
-  color: var(--color-slate-400) !important;
+  color: var(--color-slate-400) ;
 }
 
 
