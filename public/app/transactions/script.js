@@ -278,7 +278,8 @@ const updateTransaction = (elementId) => {
       transactionCategoryId: Number(categoryId),
       transactionAmount: Number(inputType == "amount" ? inputValue : item.amount),
       transactionDate: inputType == "event" ? inputValue : item.event_date.split("T")[0],
-      transactionDescription: inputType == "description" ? inputValue : item.item_description
+      transactionDescription: inputType == "description" ? inputValue : item.item_description,
+      transactionIsRecurring: item.is_recurring
     }
 
     fetch("/transaction/update", {
