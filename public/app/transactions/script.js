@@ -627,7 +627,25 @@ const loadCategories = () => {
 
   elementContainer.innerHTML = ""
 
-  categories.forEach((category) => (
+  const categoriesLength = categories.length
+  const tempCategories = categories.map(category => category)
+  const ordernedCategories = []
+  while (ordernedCategories.length < categoriesLength) {
+    let max = ""
+    let maxIndex = -1
+
+    tempCategories.forEach((category, i) => {
+      if (category.item_type > max) {
+        max = category.item_type
+        maxIndex = i
+      }
+    })
+
+    ordernedCategories.push(tempCategories[maxIndex])
+    tempCategories.splice(maxIndex, 1)
+  }
+
+  ordernedCategories.reverse().forEach((category) => (
     elementContainer.innerHTML += `
       <div class="transaction-row" style="margin-bottom: 0.5rem">
           <div class="content">
