@@ -33,6 +33,17 @@ const init = () => {
     localStorage.setItem("year", (currentDate.getFullYear()).toString())
   }
 
+  const arrange = JSON.parse(localStorage.getItem("arrange"))
+  if (!arrange) 
+    localStorage.setItem("arrange", JSON.stringify({
+      orderBy: "event_date",
+      order: "asc",
+      typeFilter: ["INCOME", "EXPENSE", "INVESTMENT"],
+    }))
+
+  initializeActiveButtons()
+  initializeOrderButtons()
+
   changeMonth(0)
 }
 
@@ -58,9 +69,9 @@ const changeMonth = async (counter) => {
 
   dateText.innerHTML = `${months[month]} | ${year}`
   localData = await fetchData()
-  const { items, categories } = localData
+  
   transactionsElement.innerHTML = ""
-  items.forEach(item => showItem(item, categories))
+  arrangeItems()
 }
 
 const loadData = async () => {
@@ -68,7 +79,7 @@ const loadData = async () => {
   localData = data
   const { items, categories } = data
   
-  items.forEach(item => showItem(item, categories))
+  arrangeItems()
 
   sctCategory.innerHTML += loadCategoryOptions(categories)
   sctType.innerHTML += loadTypeOptions()
@@ -94,10 +105,8 @@ const showItem = (item, categories) => {
 
   const categoryInfos = categories.filter(ctg => ctg.category == category)[0]
 
-  if (!categoryInfos) {
-    console.warn(`Category not found: ${category}`)
-    return
-  }
+  if (!categoryInfos) 
+    return showToast("error", "Categoria não encontrada")
 
   let formatedDate = event_date.substring(0, 10)
   
@@ -154,7 +163,6 @@ const markAsRecurring = (elementId) => {
   const currentCategory = categories.filter(category => category.category == item.category)[0]
   let categoryId = currentCategory ? currentCategory.id : 0
   
-  console.log(item)
   const body = {
     userId: Number(userId),
     transactionId: Number(item.id),
@@ -230,7 +238,7 @@ const deleteTransaction = (id) => {
 
           const transactionsElement = document.getElementById("transactions")
           transactionsElement.innerHTML = ""
-          localData.items.forEach(item => showItem(item, categories))
+          arrangeItems()
         }
         else
           showToast("Erro ao excluida transação.", "error")
@@ -394,10 +402,9 @@ const createTransaction = async () => {
 
     localData.items.push({ id, item_name, category, item_description, amount, event_date })
     
-    const { items, categories } = localData
     const transactionsElement = document.getElementById("transactions")
     transactionsElement.innerHTML = ""
-    items.forEach(item => showItem(item, categories))
+    arrangeItems()
     
     cleanInputs(elements)
   } else {
@@ -504,7 +511,7 @@ const createCategory = () => {
         const { items, categories } = localData
         
         transactionsElement.innerHTML = ""
-        items.forEach(item => showItem(item, categories))
+        arrangeItems()
       })
     }
     else
@@ -575,8 +582,7 @@ const setCategory = (body) => {
   const transactionsElement = document.getElementById("transactions")
   transactionsElement.innerHTML = ""
 
-  const { items, categories } = localData
-  items.forEach(item => showItem(item, categories))
+  arrangeItems()
 }
 
 const deleteCategory = (id) => {
@@ -607,7 +613,7 @@ const deleteCategory = (id) => {
 
           const transactionsElement = document.getElementById("transactions")
           transactionsElement.innerHTML = ""
-          localData.items.forEach(item => showItem(item, categories))
+          arrangeItems()
         }
         else
           showToast("Erro ao excluida transação.", "error")
@@ -706,4 +712,178 @@ const signOut = () => {
   sessionStorage.removeItem("lastLogin")
 
   window.location.href = '../../login/index.html'
+}
+
+const initializeActiveButtons = () => {
+  const arrange = JSON.parse(localStorage.getItem("arrange"))
+  
+  if (!arrange) return
+  
+  income_btn.classList.remove("active")
+  expense_btn.classList.remove("active")
+  investment_btn.classList.remove("active")
+  all_btn.classList.remove("active")
+  
+  if (arrange.typeFilter.length === 3)
+    return all_btn.classList.add("active")
+
+  if (arrange.typeFilter.includes("INCOME"))
+    income_btn.classList.add("active")
+  if (arrange.typeFilter.includes("EXPENSE"))
+    expense_btn.classList.add("active")
+  if (arrange.typeFilter.includes("INVESTMENT"))
+    investment_btn.classList.add("active")
+}
+
+const initializeOrderButtons = () => {
+  const arrange = JSON.parse(localStorage.getItem("arrange"))
+  
+  buttonDate.classList.remove("active")
+  buttonCategory.classList.remove("active")
+  buttonAmount.classList.remove("active")
+  buttonItemName.classList.remove("active")
+  
+  const field = {
+    "event_date": "buttonDate",
+    "category": "buttonCategory",
+    "amount": "buttonAmount",
+    "item_name": "buttonItemName"
+  }
+  
+  const buttonId = field[arrange.orderBy]
+  document.getElementById(buttonId).classList.add("active")
+  
+  
+  buttonOrder.innerText = arrange.order === "asc" ? "Ascendente" : "Decrescente"
+  if (arrange.order === "asc")
+    buttonOrder.classList.add("active")
+  else
+    buttonOrder.classList.remove("active")
+}
+
+const activeButtonType = (btnId) => {
+  const elementButton = document.getElementById(btnId)
+
+  if (btnId == "all_btn") {
+    income_btn.classList.remove("active")
+    expense_btn.classList.remove("active")
+    investment_btn.classList.remove("active")
+
+    all_btn.classList.add("active")
+    return ["INCOME", "EXPENSE", "INVESTMENT"]
+  }
+
+  all_btn.classList.remove("active")
+  elementButton.classList.toggle("active")
+
+  if (
+    (!income_btn.classList.contains("active") &&
+    !expense_btn.classList.contains("active") &&
+    !investment_btn.classList.contains("active")) ||
+    (income_btn.classList.contains("active") &&
+    expense_btn.classList.contains("active") &&
+    investment_btn.classList.contains("active"))
+  ) {
+    income_btn.classList.remove("active")
+    expense_btn.classList.remove("active")
+    investment_btn.classList.remove("active")
+
+    all_btn.classList.add("active")
+    return ["INCOME", "EXPENSE", "INVESTMENT"]
+  }
+
+  const actives = []
+  if (income_btn.classList.contains("active")) actives.push("INCOME")
+  if (expense_btn.classList.contains("active")) actives.push("EXPENSE")
+  if (investment_btn.classList.contains("active")) actives.push("INVESTMENT")
+
+  return actives
+}
+
+const activeButtonOrder = (btnId) => {
+  const buttonElement = document.getElementById(btnId)
+  const field = {
+    buttonDate: "event_date",
+    buttonCategory: "category",
+    buttonAmount: "amount",
+    buttonItemName: "item_name"
+  }
+
+  const ls = JSON.parse(localStorage.getItem("arrange"))
+
+  if (btnId === "buttonOrder") {
+    buttonElement.classList.toggle("active")
+    buttonElement.innerText = buttonElement.innerText === "Ascendente" ? "Decrescente" : "Ascendente"
+    ls.order = ls.order === "asc" ? "desc" : "asc"
+    localStorage.setItem("arrange", JSON.stringify(ls))
+    return arrangeItems()
+  }
+
+  buttonDate.classList.remove("active")
+  buttonCategory.classList.remove("active")
+  buttonAmount.classList.remove("active")
+  buttonItemName.classList.remove("active")
+
+  buttonElement.classList.add("active")
+
+  ls.orderBy = field[btnId]
+  localStorage.setItem("arrange", JSON.stringify(ls))
+  arrangeItems()
+}
+
+const rearrangeItems = (btnId) => {
+  const activeList = activeButtonType(btnId)
+
+  const ls = JSON.parse(localStorage.getItem("arrange"))
+
+  ls.typeFilter = activeList
+
+  localStorage.setItem("arrange", JSON.stringify(ls))
+  arrangeItems()
+}
+
+const arrangeItems = () => {
+  const arrange = JSON.parse(localStorage.getItem("arrange"))
+
+  const transactionsElement = document.getElementById("transactions")
+
+  const { items, categories } = localData
+
+  const itemsFiltered = items.map(item => {
+    const category = categories.filter(category => category.category === item.category)[0]
+
+    if (arrange.typeFilter.includes(category.item_type))
+      return item
+    return -1
+  })
+  .filter(i => i !== -1)
+
+  const orderField = arrange.orderBy
+  const tempItemsList = itemsFiltered.map(item => item)
+  const lengthTempList = tempItemsList.length
+  const ordernedItems = []
+
+  while (ordernedItems.length < lengthTempList) {
+    let max = tempItemsList[0][orderField]
+    tempItemsList.forEach(item => {
+      const itemValue = orderField === "amount" ? Number(item[orderField]) : item[orderField]
+      const maxValue = orderField === "amount" ? Number(max) : max
+      
+      if (maxValue < itemValue) 
+        max = item[orderField]
+    })
+
+
+    const currentItem = tempItemsList.map((item, i) => item[orderField] == max ? i : -1)
+    .filter(number => number != -1)[0]
+
+    ordernedItems.push(tempItemsList[currentItem])
+    tempItemsList.splice(currentItem, 1)
+  }
+
+  if (arrange.order === "asc") 
+    ordernedItems.reverse()
+  
+  transactionsElement.innerHTML = ""
+  ordernedItems.forEach(item => showItem(item, categories))
 }
