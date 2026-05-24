@@ -422,10 +422,10 @@ const showCalendarCaption = (day) => {
   const dayIndex = movimentData.map((item, i) => item.event_day == day ? i : -1)
   .filter(number => number != -1)[0]
   
-  captionElement.innerText = `Dia ${day}: R$${dayIndex == undefined ? 0 : movimentData[dayIndex].total}`
+  captionElement.innerHTML = `<span style='color:${dayIndex == undefined ? '#aba09c' : movimentData[dayIndex].total > 0 ? '#10b981' : '#f97316'}'>Dia ${day}: R$${dayIndex == undefined ? 0 : movimentData[dayIndex].total}</span>`
 }
 
 const cleanCalendarCaption = () => {
   const captionElement = document.getElementById("calendarCaption")
-  captionElement.innerText = ""
+  captionElement.innerHTML = ""
 }
