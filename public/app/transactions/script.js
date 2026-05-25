@@ -77,7 +77,7 @@ const changeMonth = async (counter) => {
 const loadData = async () => {
   const data = await fetchData()
   localData = data
-  const { items, categories } = data
+  const { categories } = data
   
   arrangeItems()
 
@@ -106,7 +106,7 @@ const showItem = (item, categories) => {
   const categoryInfos = categories.filter(ctg => ctg.category == category)[0]
 
   if (!categoryInfos) 
-    return showToast("error", "Categoria não encontrada")
+    return showToast("Categoria não encontrada", "error")
 
   let formatedDate = event_date.substring(0, 10)
   
