@@ -62,7 +62,7 @@ const remove = (req, res) => {
 }
 
 const getAllByUser = (req, res) => {
-  const { userId } = req.body
+  const { userId } = req.params
 
   if (!userId)
     return res.status(400).json({ message: "Id do usuário está undefined!" })

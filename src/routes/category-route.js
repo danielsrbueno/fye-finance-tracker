@@ -15,7 +15,7 @@ router.delete("/remove", (req, res) => {
   categoryController.remove(req, res)
 })
 
-router.get("/all", (req, res) => {
+router.get("/all/:userId", (req, res) => {
   categoryController.getAllByUser(req, res)
 })
 
