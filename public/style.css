@@ -453,25 +453,116 @@ ul {
   line-height: 5rem;
 }
 
-.dashboard-frame {
-  width: 100%;
-  height: 80dvh;
-  display: flex;
-  justify-content: space-between;
+.browser-outer {
   margin-top: -1.75rem;
-}
-
-.dashboard-placeholder {
-  border: 1px solid var(--color-taupe-950);
+  border-radius: 1rem;
+  border: 2px solid var(--olive-500);
   width: 100%;
-  height: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: 0.75rem;
+  padding: 1.25rem;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
   background-color: var(--color-taupe-900);
-  font-size: 1.5rem;
+}
+
+.browser-inner {
+  width: 100%;
+  height: 100%;
+  border-radius: 0.75rem;
+  border: 2px solid var(--color-taupe-500);
+  overflow-x: hidden;
+}
+
+.browser-inner .browser-bar {
+  width: 100%;
+  position: relative;
+  height: 3rem;
+  border-bottom: 2px solid var(--color-taupe-500);
+  background-color: var(--color-taupe-700);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.browser-inner .browser-bar .bar-left {
+  height: 3rem;
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+  position: absolute;
+  left: 0.75rem;
+}
+
+.browser-inner .bar-left .icon-dots {
+  color: var(--color-taupe-950);
+  opacity: 0.8;
+  font-size: 3.75rem;
+}
+
+.browser-inner .bar-left .pill {
+  display: flex;
+  align-items: center;
+  padding: 0.25rem 0.5rem;
+  gap: 0.25rem;
+  color: var(--color-taupe-500);
+  border-radius: 9999px;
+  background-color: var(--color-taupe-900);
+}
+
+.browser-inner .bar-left .sidebar-icon {
+  opacity: 0.8;
+  font-size: 1.25rem;
+}
+
+.browser-inner .bar-left .arrow-down-icon {
+  opacity: 0.8;
+  font-size: 0.875rem;
+}
+
+.browser-inner .browser-bar .bar-url {
+  position: relative;
+  height: 2rem;
+  background-color: var(--color-taupe-200);
+  display: flex;
+  align-items: center;
+  color: var(--color-taupe-950);
+  border-radius: 9999px;
+  padding-left: 9rem;
+  padding-right: 9rem;
+}
+
+.browser-inner .bar-url .lock-icon {
+  position: absolute;
+  left: 0.75rem;
+  color: var(--color-taupe-950);
+}
+
+.browser-inner .bar-url .url-text {
+  font-weight: 300;
+}
+
+.browser-inner .bar-url .reload-icon {
+  position: absolute;
+  right: 0.75rem;
+  color: var(--color-taupe-950);
+}
+
+.browser-inner .browser-bar .bar-right {
+  position: absolute;
+  right: 0.75rem;
+  top: 0.5rem;
+  display: flex;
+  align-items: center;
+  padding: 0.5rem;
   gap: 0.75rem;
+  color: var(--color-taupe-500);
+  border-radius: 9999px;
+  background-color: var(--color-taupe-900);
+}
+
+.browser-screenshot {
+  width: 100%;
 }
 
 /* Invite Section */
