@@ -12,6 +12,9 @@ const init = async () => {
 
   const parsedHistoric = JSON.parse(localStorage.getItem("chatHistoric"))
   parsedHistoric.messages.forEach(message => createMessageElement(message))
+
+  const chatElement = document.getElementById("chat")
+  chatElement.scrollTo(0, chatElement.scrollHeight)
 }
 
 const sendMessage = async () => {
@@ -24,6 +27,8 @@ const sendMessage = async () => {
 
   if (!userMessage)
     return showToast("Digite uma mensagem.", "error")
+  
+  messageElement.value = ""
 
   const categories = await getCategories(userId)
 
@@ -53,9 +58,9 @@ const sendMessage = async () => {
   const responseMessage = `
     ${response} <br>
     <hr>
-    Dados da transação: <br>
+    <strong>Dados da transação</strong> <br>
     Nome: ${itemName} <br>
-    Valor: ${amount} <br>
+    Valor: R$${amount} <br>
     Data: ${eventDate.split("-")[2]}/${eventDate.split("-")[1]}/${eventDate.split("-")[0]} <br>
     Categoria: ${
       categories.map(ctg => ctg.id === category ? ctg.category : -1)
@@ -68,7 +73,6 @@ const sendMessage = async () => {
   saveMessage(userMessage)
   saveMessage(responseMessage)
   
-  messageElement.value = ""
   createTransaction(itemName, amount, eventDate, category, description)
 }
 
@@ -115,6 +119,8 @@ const createMessageElement = (message) => {
   chatElement.innerHTML += `
    <div class="message">${message}</div>
   `
+  
+  chatElement.scrollTo(0, chatElement.scrollHeight)
 }
 
 const saveMessage = (message) => {
