@@ -293,6 +293,7 @@ const updateTransaction = (elementId) => {
         if (res.ok){
           showToast("Transação atualizada.", "success")
           setItem(body)
+          arrangeItems()
         }
         else
           showToast("Erro ao atualizar transação.", "error")
@@ -507,9 +508,7 @@ const createCategory = () => {
         localData.categories.push({ id, category } = json[0])
         loadCategories()
         categoryNameInput.value = ""
-        categoryTypeInput.value = ""
-
-        const { items, categories } = localData
+        categoryTypeInput.value = ""        
         
         transactionsElement.innerHTML = ""
         arrangeItems()
@@ -871,7 +870,7 @@ const arrangeItems = () => {
   const itemsFiltered = items.map(item => {
     const category = categories.filter(category => category.category === item.category)[0]
 
-    if (arrange.typeFilter.includes(category.item_type))
+    if (category && arrange.typeFilter.includes(category.item_type))
       return item
     return -1
   })
