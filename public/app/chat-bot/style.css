@@ -398,6 +398,15 @@ ul {
   padding: 3rem;
 }
 
+.chat::-webkit-scrollbar {
+  display: none;
+}
+
+.chat {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
 .chat-container .chat .message {
   max-width: 60%;
   width: fit-content;
@@ -410,9 +419,13 @@ ul {
   font-family: var(--font-jetbrains-mono);
 }
 
+.chat-container .chat .message:last-child {
+  margin-bottom: 1rem;
+}
+
 .chat-container .chat .message:nth-child(odd) {
   margin-left: auto;
-  border-radius: 9999px 9999px 0 9999px !important;
+  border-radius: 2rem 2rem 0 2rem !important;
 }
 
 .chat-container .form {
