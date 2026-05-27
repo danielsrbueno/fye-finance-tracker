@@ -41,19 +41,17 @@ const sendMessage = async () => {
 
   createMessageElement(userMessage)
 
-  const apiResponseJson = await fetch("http://localhost:5173/send-message", {
+  const apiResponseJson = await fetch("/chat-bot/send-message", {
     method: "POST",
     headers: {
-    "Content-Type": "application/json"
-  },
+      "Content-Type": "application/json"
+    },
     body: JSON.stringify({ message })
   })
-  .then(res => res.json())
-  .then(data => data)
- 
-  const { apiResponse } = apiResponseJson
 
-  const { response, itemName, amount, eventDate, category, description } = JSON.parse(apiResponse)
+  const data = await apiResponseJson.json()
+
+  const { response, itemName, amount, eventDate, category, description } = data
 
   const responseMessage = `
     ${response} <br>
