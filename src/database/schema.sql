@@ -5,7 +5,7 @@ create table if not exists fintrack.user (
 	id int auto_increment,
   user_name varchar (60) not null,
   email varchar(255) not null unique,
-  passwd varchar(255) not null,
+  passwd char(64) not null,
   
   created_at datetime not null default current_timestamp,
   updated_at datetime,
@@ -87,7 +87,7 @@ values
 
 insert fintrack.user (user_name, email, passwd)
 values
-  ("Daniel Bueno", "daniel@danbueno.com", "hash123");
+  ("Daniel Bueno", "daniel@danbueno.com", sha2("hash123", 256));
 
 insert into fintrack.item (
   user_id,
