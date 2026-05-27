@@ -30,7 +30,7 @@ app.use("/chat-bot", chatbotRouter)
 
 app.listen(APP_PORT, () => {
   console.log(`
-      /$$$$$$$$                 
+     /$$$$$$$$                 
     | $$_____/                 
     | $$    /$$   /$$  /$$$$$$ 
     | $$$$$| $$  | $$ /$$__  $$
