@@ -70,9 +70,9 @@ const changeMonth = async (counter) => {
   movimentData = moviments
   showHeatmap()
 
-  const income = typeof totalByItemTypes[0] == "undefined" ? "0.00" : Number(totalByItemTypes[0].amount_total).toFixed(2)
-  const expense = typeof totalByItemTypes[1] == "undefined" ? "0.00" : Number(totalByItemTypes[1].amount_total).toFixed(2)
-  const investment = typeof totalByItemTypes[2] == "undefined" ? "0.00" : Number(totalByItemTypes[2].amount_total).toFixed(2)
+  const income = typeof totalByItemTypes.income === "undefined" ? "0.00" : Number(totalByItemTypes.income.amount_total).toFixed(2)
+  const expense = typeof totalByItemTypes.expense === "undefined" ? "0.00" : Number(totalByItemTypes.expense.amount_total).toFixed(2)
+  const investment = typeof totalByItemTypes.investment === "undefined" ? "0.00" : Number(totalByItemTypes.investment.amount_total).toFixed(2)
   const balance = (income - expense - investment).toFixed(2)
 
   const cards = [{
@@ -137,8 +137,9 @@ const changeMonth = async (counter) => {
 
   const financialHealthInvestmentFormula = (investment / income) * 0.3
   const financialHealthExpenseFormula = ((income - expense) / income) * 0.7
-  const financialHealthPoints = (100 - (financialHealthInvestmentFormula + financialHealthExpenseFormula) * 100).toFixed()
+  const financialHealthPoints = income > 0 ? ((financialHealthInvestmentFormula + financialHealthExpenseFormula) * 100).toFixed() : 0
   const healthColor = healthColors[Math.abs((financialHealthPoints / 10) -1).toFixed()]
+
   healthPercentage.innerHTML = `<p style='color: ${healthColor}'>${financialHealthPoints}%</p>`
   financialHealthMessage.innerHTML = getFinancialHealthMessage(income, expense, investment, financialHealthPoints)
 
@@ -164,13 +165,8 @@ const changeMonth = async (counter) => {
       cutout: '85%',
       responsive: true,
       maintainAspectRatio: false,
-      animations: {
-        tension: {
-          duration: 2000,
-          easing: 'easeOutCubic',
-          from: 1,
-          to: 0,
-        }
+      animation: {
+        duration: 1200
       },
       plugins: {
         title: {
@@ -276,10 +272,15 @@ const drawCharts = (chart) => {
   const colors = getRandomColors(labels.length)
 
   if (chartsInstances[chart.element.id]) {
-    chartsInstances[chart.element.id].destroy()
+    chartsInstances[chart.element.id].data.labels = labels
+    chartsInstances[chart.element.id].data.datasets[0].data = data
+    chartsInstances[chart.element.id].update()
+    return
   }
 
-  const config = {
+  // const config = 
+
+  chartsInstances[chart.element.id] = new Chart(chart.element, {
     type: chart.type,
     data: {
       labels,
@@ -294,13 +295,8 @@ const drawCharts = (chart) => {
     options: {
       responsive: true,
       maintainAspectRatio: false,
-      animations: {
-        tension: {
-          duration: 2000,
-          easing: 'easeOutCubic',
-          from: 1,
-          to: 0,
-        }
+      animation: {
+        duration: 1200
       },
       plugins: {
         title: {
@@ -325,37 +321,33 @@ const drawCharts = (chart) => {
         }
       }
     }
-  }
-
-  chartsInstances[chart.element.id] = new Chart(chart.element, config)
+  })
 }
 
 const usedColors = []
 const getRandomColors = (quantity) => {
-    const colors = [
-    ['#aba09c', '#7c6d67', '#5b4f4b', '#473c39', '#2b2422',], // taupe
-    ['#9ca8ab', '#67787c', '#4b585b', '#394447', '#22292b',], // mist
-    ['#a8a29e', '#78716c', '#57534e', '#44403c', '#292524',], // stone
-    ['#a89ea9', '#79697b', '#594c5b', '#463947', '#2a212c',], // mauve
-    ['#a3a3a3', '#737373', '#525252', '#404040', '#262626',], // neutral
-    ['#9ca3af', '#6b7280', '#4b5563', '#374151', '#1f2937',], // gray
-    ['#abab9c', '#7c7c67', '#5b5b4b', '#474739', '#2b2b22',], // olive
-    ['#94a3b8', '#64748b', '#475569', '#334155', '#1e293b',], // slate
-    ['#a1a1aa', '#71717a', '#52525b', '#3f3f46', '#27272a',], // zinc
+  const colors = [
+    '#aba09c', '#7c6d67', '#5b4f4b', '#473c39', '#2b2422', // taupe
+    '#9ca8ab', '#67787c', '#4b585b', '#394447', '#22292b', // mist
+    '#a8a29e', '#78716c', '#57534e', '#44403c', '#292524', // stone
+    '#a89ea9', '#79697b', '#594c5b', '#463947', '#2a212c', // mauve
+    '#a3a3a3', '#737373', '#525252', '#404040', '#262626', // neutral
+    '#9ca3af', '#6b7280', '#4b5563', '#374151', '#1f2937', // gray
+    '#abab9c', '#7c7c67', '#5b5b4b', '#474739', '#2b2b22', // olive
+    '#94a3b8', '#64748b', '#475569', '#334155', '#1e293b', // slate
+    '#a1a1aa', '#71717a', '#52525b', '#3f3f46', '#27272a', // zinc
   ]
-  if (usedColors.length == 45)
-    usedColors.splice(0, usedColors.length)
 
   const randColors = []
   for(let i = 0; i < quantity; i++) {
-    const randRow = Math.floor(Math.random() * 9)
-    const randCol = Math.floor(Math.random() * 5)
-    if (!usedColors.includes(colors[randRow][randCol])) {
-      usedColors.push(colors[randRow][randCol])
-      randColors.push(colors[randRow][randCol])
-    }
-    else 
-      quantity++
+    if (usedColors.length >= 45)
+      usedColors.splice(0, usedColors.length)
+
+    const availableColors = colors.filter(color => !usedColors.includes(color))
+    const rand = Math.floor(Math.random() * availableColors.length)
+    
+    usedColors.push(availableColors[rand])
+    randColors.push(availableColors[rand])
   }
 
   return randColors
@@ -380,9 +372,9 @@ const showHeatmap = () => {
 
   const gapDays = new Date(year, month, 1).getDay()
 
-  calendarElement.innerHTML = ""
+  let html = "" 
   for (let i = 0; i < gapDays; i++) {
-    calendarElement.innerHTML += `
+    html += `
       <div 
       >
         <p class='day-number mono'></p>
@@ -391,7 +383,7 @@ const showHeatmap = () => {
   }
   
   for (let i = 0; i < monthLimitDays[month] ; i++) {
-    calendarElement.innerHTML += `
+    html += `
       <div 
         class='day' 
         id='day-${i +1}' 
@@ -402,6 +394,8 @@ const showHeatmap = () => {
       </div>
     `
   }
+
+  calendarElement.innerHTML = html
 
   let max = 0, min = 0
   movimentData.forEach(day => {
@@ -437,10 +431,10 @@ const showCalendarCaption = (day) => {
   const dayIndex = movimentData.map((item, i) => item.event_day == day ? i : -1)
   .filter(number => number != -1)[0]
   
-  captionElement.innerText = `Dia ${day}: R$${dayIndex == undefined ? 0 : movimentData[dayIndex].total}`
+  captionElement.innerHTML = `<span style='color:${dayIndex == undefined ? '#aba09c' : movimentData[dayIndex].total > 0 ? '#10b981' : '#f97316'}'>Dia ${day}: R$${dayIndex == undefined ? 0 : movimentData[dayIndex].total}</span>`
 }
 
 const cleanCalendarCaption = () => {
   const captionElement = document.getElementById("calendarCaption")
-  captionElement.innerText = ""
+  captionElement.innerHTML = ""
 }

@@ -1,4 +1,4 @@
-const categoryModel = require("../models/category-model")
+const categoryModel = require("../models/category.model")
 
 const create = (req, res) => {
   const { userId, categoryName, categoryType } = req.body
@@ -62,7 +62,7 @@ const remove = (req, res) => {
 }
 
 const getAllByUser = (req, res) => {
-  const { userId } = req.body
+  const { userId } = req.params
 
   if (!userId)
     return res.status(400).json({ message: "Id do usuário está undefined!" })

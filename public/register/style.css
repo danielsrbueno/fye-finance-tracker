@@ -148,7 +148,7 @@ ul {
   flex-direction: column;
   justify-content: space-around;
   position: relative;
-  border-radius: 1rem 0 0 1rem;
+  border-radius: 0 1rem 1rem 0;
 }
 
 .register-header {

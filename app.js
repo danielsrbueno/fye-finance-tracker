@@ -11,10 +11,11 @@ const APP_PORT = process.env.APP_PORT
 const APP_HOST = process.env.APP_HOST
 
 const app = express()
-const indexRouter = require("./src/routes/index-route")
-const userRouter = require("./src/routes/user-route")
-const transactionRouter = require("./src/routes/transaction-route")
-const categoryRouter = require("./src/routes/category-route")
+const indexRouter = require("./src/routes/index.route")
+const userRouter = require("./src/routes/user.route")
+const transactionRouter = require("./src/routes/transaction.route")
+const categoryRouter = require("./src/routes/category.route")
+const chatbotRouter = require("./src/routes/chatbot.route")
 
 app.use(express.json())
 app.use(express.urlencoded({ extended: false }))
@@ -25,17 +26,23 @@ app.use("/", indexRouter)
 app.use("/user", userRouter)
 app.use("/transaction", transactionRouter)
 app.use("/category", categoryRouter)
+app.use("/chat-bot", chatbotRouter)
 
 app.listen(APP_PORT, () => {
-    console.log(`
-    ##   ##  ######   #####             ####       ##     ######     ##              ##  ##    ####    ######  
-    ##   ##  ##       ##  ##            ## ##     ####      ##      ####             ##  ##     ##         ##  
-    ##   ##  ##       ##  ##            ##  ##   ##  ##     ##     ##  ##            ##  ##     ##        ##   
-    ## # ##  ####     #####    ######   ##  ##   ######     ##     ######   ######   ##  ##     ##       ##    
-    #######  ##       ##  ##            ##  ##   ##  ##     ##     ##  ##            ##  ##     ##      ##     
-    ### ###  ##       ##  ##            ## ##    ##  ##     ##     ##  ##             ####      ##     ##      
-    ##   ##  ######   #####             ####     ##  ##     ##     ##  ##              ##      ####    ######  
-    \n\n\n                                                                                                 
-    Servidor do seu site já está rodando! Acesse o caminho a seguir para visualizar .: http://${APP_HOST}:${APP_PORT} :. \n\n
-    Você está rodando sua aplicação em ambiente de .:${process.env.ENVIRONMENT}:. \n\n`)
+  console.log(`
+     /$$$$$$$$                 
+    | $$_____/                 
+    | $$    /$$   /$$  /$$$$$$ 
+    | $$$$$| $$  | $$ /$$__  $$
+    | $$__/| $$  | $$| $$$$$$$$
+    | $$   | $$  | $$| $$_____/
+    | $$   |  $$$$$$$|  $$$$$$$
+    |__/    \____  $$ \_______/
+            /$$  | $$          
+          |  $$$$$$/          
+            \______/         
+    \n                                                                  
+    Servidor do seu site já está rodando! Acesse o caminho a seguir para visualizar .: http://${APP_HOST}:${APP_PORT} :.
+    Você está rodando sua aplicação em ambiente de .:${process.env.ENVIRONMENT}:. \n\n
+  `)
 })

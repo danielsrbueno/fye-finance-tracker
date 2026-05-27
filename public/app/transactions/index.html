@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>App | Fye</title>
-  <link rel="shortcut icon" href="../../assets/images/logo/logo-64.ico" type="image/x-icon">
+  <link rel="shortcut icon" href="../../assets/images/logo/favicon.ico" type="image/x-icon">
   <link rel="stylesheet" href="style.css">
   <link rel="stylesheet" type="text/css"
     href="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.1/src/regular/style.css" />
@@ -40,7 +40,13 @@
           <p>Transações</p>
         </div>
       </div>
-
+      <div class="sidebar-nav-group">
+        <h2 class="sidebar-group-label mono">Chats</h2>
+        <div class="sidebar-item inactive" onclick="window.location.href='../chat-bot/index.html'">
+          <i class="ph-bold ph-sparkle icon-sm"></i>
+          <p>Chatbot</p>
+        </div>
+      </div>
     </div>
 
     <div class="sidebar-user">
@@ -91,22 +97,21 @@
     <div class="form-col">
       <p class="sub-title mono"><i class="ph-bold ph-list-dashes"></i>Ordenar por:</p>
       <div class="buttons">
-        <button class="button mono flex-1 active">Data</button>
-        <button class="button mono flex-1">Categoria</button>
-        <button class="button mono flex-1">Tipo</button>
-        <button class="button mono flex-1">Valor</button>
-        <button class="button mono flex-1">Nome</button>
+        <button class="button mono flex-1 active" id="buttonDate" onclick="activeButtonOrder('buttonDate')">Data</button>
+        <button class="button mono flex-1" id="buttonCategory" onclick="activeButtonOrder('buttonCategory')">Categoria</button>
+        <button class="button mono flex-1" id="buttonAmount" onclick="activeButtonOrder('buttonAmount')">Valor</button>
+        <button class="button mono flex-1" id="buttonItemName" onclick="activeButtonOrder('buttonItemName')">Nome</button>
         <div class="vertical-divisor"></div>
-        <button class="button mono flex-1 active">Decrescente</button>
+        <button class="button mono flex-1 active" id="buttonOrder" onclick="activeButtonOrder('buttonOrder')">Ascendente</button>
       </div>
       <div class="divisor"></div>
       <p class="sub-title mono"><i class="ph-bold ph-funnel"></i>Filtrar por:</p>
       <div class="buttons">
-        <button class="button mono flex-1">Renda</button>
-        <button class="button mono flex-1">Gasto</button>
-        <button class="button mono flex-1">Investimento</button>
+        <button class="button mono flex-1 active" id="all_btn" onclick="rearrangeItems('all_btn')">Todos</button>
         <div class="vertical-divisor"></div>
-        <button class="button mono flex-1">Categoria</button>
+        <button class="button mono flex-1" id="income_btn" onclick="rearrangeItems('income_btn')">Renda</button>
+        <button class="button mono flex-1" id="expense_btn" onclick="rearrangeItems('expense_btn')">Gasto</button>
+        <button class="button mono flex-1" id="investment_btn" onclick="rearrangeItems('investment_btn')">Investimento</button>
       </div>
     </div>
 

@@ -33,6 +33,17 @@ const init = () => {
     localStorage.setItem("year", (currentDate.getFullYear()).toString())
   }
 
+  const arrange = JSON.parse(localStorage.getItem("arrange"))
+  if (!arrange) 
+    localStorage.setItem("arrange", JSON.stringify({
+      orderBy: "event_date",
+      order: "asc",
+      typeFilter: ["INCOME", "EXPENSE", "INVESTMENT"],
+    }))
+
+  initializeActiveButtons()
+  initializeOrderButtons()
+
   changeMonth(0)
 }
 
@@ -58,17 +69,17 @@ const changeMonth = async (counter) => {
 
   dateText.innerHTML = `${months[month]} | ${year}`
   localData = await fetchData()
-  const { items, categories } = localData
+  
   transactionsElement.innerHTML = ""
-  items.forEach(item => showItem(item, categories))
+  arrangeItems()
 }
 
 const loadData = async () => {
   const data = await fetchData()
   localData = data
-  const { items, categories } = data
+  const { categories } = data
   
-  items.forEach(item => showItem(item, categories))
+  arrangeItems()
 
   sctCategory.innerHTML += loadCategoryOptions(categories)
   sctType.innerHTML += loadTypeOptions()
@@ -90,21 +101,19 @@ const fetchData = () => {
 
 const showItem = (item, categories) => {
   const transactionsElement = document.getElementById("transactions")
-  const { id, item_name, amount, event_date, category, item_description } = item
+  const { id, item_name, amount, event_date, category, item_description, is_recurring } = item
 
   const categoryInfos = categories.filter(ctg => ctg.category == category)[0]
 
-  if (!categoryInfos) {
-    console.warn(`Category not found: ${category}`)
-    return
-  }
+  if (!categoryInfos) 
+    return showToast("Categoria não encontrada", "error")
 
   let formatedDate = event_date.substring(0, 10)
   
   const structure = `
     <div class="transaction-row" id='item_${id}'>
       <div class="options-container hidden" id="item_options_${id}">
-        <div class="option"><i class="ph-bold ph-flag" oncliconsck="markAsCurring(${id})"></i>Marcar como recorrente</div>
+        <div class="option recurring-${is_recurring}" id="item_recurreng_${id}" onclick="markAsRecurring(${id})"><i class="ph-bold ph-${is_recurring === 1 ? "x" : "flag"}"></i>${is_recurring === 1 ? "Desmarcar" : "Marcar"} como recorrente</div>
         <div class="option color-red" onclick="deleteTransaction(${id})"><i class="ph-bold ph-trash"></i>Excluir</div>
       </div>
       <div class="show-options" id="show_options_${id}" onclick="showOptions(${id})">
@@ -144,6 +153,46 @@ const showItem = (item, categories) => {
     </div>
   `
   transactionsElement.innerHTML += structure
+}
+
+const markAsRecurring = (elementId) => {
+  const { items, categories } = localData
+
+  const item = items.filter(item => item.id == elementId)[0]
+
+  const currentCategory = categories.filter(category => category.category == item.category)[0]
+  let categoryId = currentCategory ? currentCategory.id : 0
+  
+  const body = {
+    userId: Number(userId),
+    transactionId: Number(item.id),
+    transactionName: (item.item_name).trim(),
+    transactionCategoryId: Number(categoryId),
+    transactionAmount: Number(item.amount),
+    transactionDate: item.event_date.split("T")[0],
+    transactionDescription: item.item_description,
+    transactionIsRecurring: item.is_recurring === 0 ? 1 : 0
+  }
+
+  fetch("/transaction/update", {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(body)
+    })
+      .then(res => {
+        if (res.ok){
+          const element = document.getElementById(`item_recurreng_${elementId}`)
+          const is_recurring = body.transactionIsRecurring
+          element.innerHTML = `<i class="ph-bold ph-${is_recurring === 0 ? "flag" : "x"}"></i>${is_recurring === 0 ? "Marcar" : "Desmarcar"} como recorrente`
+
+          setItem(body)
+        }
+        else
+          showToast("Erro ao atualizar transação.", "error")
+      })
+      .catch(err => showToast("Erro ao atualizar transação.", "error"))
 }
 
 const showOptions = (elementId) => {
@@ -189,7 +238,7 @@ const deleteTransaction = (id) => {
 
           const transactionsElement = document.getElementById("transactions")
           transactionsElement.innerHTML = ""
-          localData.items.forEach(item => showItem(item, categories))
+          arrangeItems()
         }
         else
           showToast("Erro ao excluida transação.", "error")
@@ -229,7 +278,8 @@ const updateTransaction = (elementId) => {
       transactionCategoryId: Number(categoryId),
       transactionAmount: Number(inputType == "amount" ? inputValue : item.amount),
       transactionDate: inputType == "event" ? inputValue : item.event_date.split("T")[0],
-      transactionDescription: inputType == "description" ? inputValue : item.item_description
+      transactionDescription: inputType == "description" ? inputValue : item.item_description,
+      transactionIsRecurring: item.is_recurring
     }
 
     fetch("/transaction/update", {
@@ -243,6 +293,7 @@ const updateTransaction = (elementId) => {
         if (res.ok){
           showToast("Transação atualizada.", "success")
           setItem(body)
+          arrangeItems()
         }
         else
           showToast("Erro ao atualizar transação.", "error")
@@ -263,7 +314,7 @@ const compareItem = (item, value, inputType, category="") => {
 }
 
 const setItem = (body) => {
-  const { transactionName, transactionCategoryId, transactionTypeId, transactionAmount, transactionDate, transactionDescription } = body
+  const { transactionName, transactionCategoryId, transactionAmount, transactionDate, transactionDescription, transactionIsRecurring } = body
 
   const transactionId = (body.transactionId || -1)
   
@@ -274,10 +325,10 @@ const setItem = (body) => {
     id: transactionId,
     item_name: transactionName,
     category: getCategoryById(transactionCategoryId),
-    item_type: typeId[transactionTypeId],
     amount: transactionAmount,
     event_date: transactionDate,
-    item_description: transactionDescription
+    item_description: transactionDescription,
+    is_recurring: transactionIsRecurring
   }
 }
 
@@ -353,10 +404,9 @@ const createTransaction = async () => {
 
     localData.items.push({ id, item_name, category, item_description, amount, event_date })
     
-    const { items, categories } = localData
     const transactionsElement = document.getElementById("transactions")
     transactionsElement.innerHTML = ""
-    items.forEach(item => showItem(item, categories))
+    arrangeItems()
     
     cleanInputs(elements)
   } else {
@@ -458,12 +508,10 @@ const createCategory = () => {
         localData.categories.push({ id, category } = json[0])
         loadCategories()
         categoryNameInput.value = ""
-        categoryTypeInput.value = ""
-
-        const { items, categories } = localData
+        categoryTypeInput.value = ""        
         
         transactionsElement.innerHTML = ""
-        items.forEach(item => showItem(item, categories))
+        arrangeItems()
       })
     }
     else
@@ -534,8 +582,7 @@ const setCategory = (body) => {
   const transactionsElement = document.getElementById("transactions")
   transactionsElement.innerHTML = ""
 
-  const { items, categories } = localData
-  items.forEach(item => showItem(item, categories))
+  arrangeItems()
 }
 
 const deleteCategory = (id) => {
@@ -566,7 +613,7 @@ const deleteCategory = (id) => {
 
           const transactionsElement = document.getElementById("transactions")
           transactionsElement.innerHTML = ""
-          localData.items.forEach(item => showItem(item, categories))
+          arrangeItems()
         }
         else
           showToast("Erro ao excluida transação.", "error")
@@ -580,7 +627,25 @@ const loadCategories = () => {
 
   elementContainer.innerHTML = ""
 
-  categories.forEach((category) => (
+  const categoriesLength = categories.length
+  const tempCategories = categories.map(category => category)
+  const ordernedCategories = []
+  while (ordernedCategories.length < categoriesLength) {
+    let max = ""
+    let maxIndex = -1
+
+    tempCategories.forEach((category, i) => {
+      if (category.item_type > max) {
+        max = category.item_type
+        maxIndex = i
+      }
+    })
+
+    ordernedCategories.push(tempCategories[maxIndex])
+    tempCategories.splice(maxIndex, 1)
+  }
+
+  ordernedCategories.reverse().forEach((category) => (
     elementContainer.innerHTML += `
       <div class="transaction-row" style="margin-bottom: 0.5rem">
           <div class="content">
@@ -665,4 +730,178 @@ const signOut = () => {
   sessionStorage.removeItem("lastLogin")
 
   window.location.href = '../../login/index.html'
+}
+
+const initializeActiveButtons = () => {
+  const arrange = JSON.parse(localStorage.getItem("arrange"))
+  
+  if (!arrange) return
+  
+  income_btn.classList.remove("active")
+  expense_btn.classList.remove("active")
+  investment_btn.classList.remove("active")
+  all_btn.classList.remove("active")
+  
+  if (arrange.typeFilter.length === 3)
+    return all_btn.classList.add("active")
+
+  if (arrange.typeFilter.includes("INCOME"))
+    income_btn.classList.add("active")
+  if (arrange.typeFilter.includes("EXPENSE"))
+    expense_btn.classList.add("active")
+  if (arrange.typeFilter.includes("INVESTMENT"))
+    investment_btn.classList.add("active")
+}
+
+const initializeOrderButtons = () => {
+  const arrange = JSON.parse(localStorage.getItem("arrange"))
+  
+  buttonDate.classList.remove("active")
+  buttonCategory.classList.remove("active")
+  buttonAmount.classList.remove("active")
+  buttonItemName.classList.remove("active")
+  
+  const field = {
+    "event_date": "buttonDate",
+    "category": "buttonCategory",
+    "amount": "buttonAmount",
+    "item_name": "buttonItemName"
+  }
+  
+  const buttonId = field[arrange.orderBy]
+  document.getElementById(buttonId).classList.add("active")
+  
+  
+  buttonOrder.innerText = arrange.order === "asc" ? "Ascendente" : "Decrescente"
+  if (arrange.order === "asc")
+    buttonOrder.classList.add("active")
+  else
+    buttonOrder.classList.remove("active")
+}
+
+const activeButtonType = (btnId) => {
+  const elementButton = document.getElementById(btnId)
+
+  if (btnId == "all_btn") {
+    income_btn.classList.remove("active")
+    expense_btn.classList.remove("active")
+    investment_btn.classList.remove("active")
+
+    all_btn.classList.add("active")
+    return ["INCOME", "EXPENSE", "INVESTMENT"]
+  }
+
+  all_btn.classList.remove("active")
+  elementButton.classList.toggle("active")
+
+  if (
+    (!income_btn.classList.contains("active") &&
+    !expense_btn.classList.contains("active") &&
+    !investment_btn.classList.contains("active")) ||
+    (income_btn.classList.contains("active") &&
+    expense_btn.classList.contains("active") &&
+    investment_btn.classList.contains("active"))
+  ) {
+    income_btn.classList.remove("active")
+    expense_btn.classList.remove("active")
+    investment_btn.classList.remove("active")
+
+    all_btn.classList.add("active")
+    return ["INCOME", "EXPENSE", "INVESTMENT"]
+  }
+
+  const actives = []
+  if (income_btn.classList.contains("active")) actives.push("INCOME")
+  if (expense_btn.classList.contains("active")) actives.push("EXPENSE")
+  if (investment_btn.classList.contains("active")) actives.push("INVESTMENT")
+
+  return actives
+}
+
+const activeButtonOrder = (btnId) => {
+  const buttonElement = document.getElementById(btnId)
+  const field = {
+    buttonDate: "event_date",
+    buttonCategory: "category",
+    buttonAmount: "amount",
+    buttonItemName: "item_name"
+  }
+
+  const ls = JSON.parse(localStorage.getItem("arrange"))
+
+  if (btnId === "buttonOrder") {
+    buttonElement.classList.toggle("active")
+    buttonElement.innerText = buttonElement.innerText === "Ascendente" ? "Decrescente" : "Ascendente"
+    ls.order = ls.order === "asc" ? "desc" : "asc"
+    localStorage.setItem("arrange", JSON.stringify(ls))
+    return arrangeItems()
+  }
+
+  buttonDate.classList.remove("active")
+  buttonCategory.classList.remove("active")
+  buttonAmount.classList.remove("active")
+  buttonItemName.classList.remove("active")
+
+  buttonElement.classList.add("active")
+
+  ls.orderBy = field[btnId]
+  localStorage.setItem("arrange", JSON.stringify(ls))
+  arrangeItems()
+}
+
+const rearrangeItems = (btnId) => {
+  const activeList = activeButtonType(btnId)
+
+  const ls = JSON.parse(localStorage.getItem("arrange"))
+
+  ls.typeFilter = activeList
+
+  localStorage.setItem("arrange", JSON.stringify(ls))
+  arrangeItems()
+}
+
+const arrangeItems = () => {
+  const arrange = JSON.parse(localStorage.getItem("arrange"))
+
+  const transactionsElement = document.getElementById("transactions")
+
+  const { items, categories } = localData
+
+  const itemsFiltered = items.map(item => {
+    const category = categories.filter(category => category.category === item.category)[0]
+
+    if (category && arrange.typeFilter.includes(category.item_type))
+      return item
+    return -1
+  })
+  .filter(i => i !== -1)
+
+  const orderField = arrange.orderBy
+  const tempItemsList = itemsFiltered.map(item => item)
+  const lengthTempList = tempItemsList.length
+  const ordernedItems = []
+
+  while (ordernedItems.length < lengthTempList) {
+    let max = tempItemsList[0][orderField]
+    tempItemsList.forEach(item => {
+      const itemValue = orderField === "amount" ? Number(item[orderField]) : item[orderField]
+      const maxValue = orderField === "amount" ? Number(max) : max
+      
+      if (maxValue < itemValue) 
+        max = item[orderField]
+    })
+
+
+    const currentItem = tempItemsList.map((item, i) => item[orderField] == max ? i : -1)
+    .filter(number => number != -1)[0]
+
+    ordernedItems.push(tempItemsList[currentItem])
+    tempItemsList.splice(currentItem, 1)
+  }
+
+  if (arrange.order === "asc") 
+    ordernedItems.reverse()
+  
+  transactionsElement.innerHTML = ""
+  ordernedItems.forEach(item => showItem(item, categories))
 }

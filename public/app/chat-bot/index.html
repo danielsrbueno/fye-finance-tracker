@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>App | Fye</title>
-  <link rel="shortcut icon" href="../assets/images/logo/favicon.ico" type="image/x-icon">
+  <link rel="shortcut icon" href="../../assets/images/logo/favicon.ico" type="image/x-icon">
   <link rel="stylesheet" href="style.css">
   <link rel="stylesheet" type="text/css"
     href="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.1/src/regular/style.css" />
@@ -13,9 +13,8 @@
     <link rel="stylesheet" type="text/css"
     href="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.1/src/fill/style.css" />
   <script src="script.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
-<body class="page-body" onload="init()">
+<body class="page-body" id="body" onload="init()">
 
   <aside class="sidebar">
 
@@ -32,24 +31,24 @@
 
       <div class="sidebar-nav-group">
         <h2 class="sidebar-group-label mono">Dashboards</h2>
-        <div class="sidebar-item active">
+        <div class="sidebar-item inactive" onclick="window.location.href='../index.html'">
           <i class="ph-bold ph-house-simple icon"></i>
           <p>Visão geral</p>
         </div>
-        <div class="sidebar-item inactive" onclick="window.location.href='transactions/index.html'">
+        <div class="sidebar-item inactive" onclick="window.location.href='../transactions/index.html'">
           <i class="ph-bold ph-plus icon-sm"></i>
           <p>Transações</p>
         </div>
       </div>
+    
       <div class="sidebar-nav-group">
         <h2 class="sidebar-group-label mono">Chats</h2>
-        <div class="sidebar-item inactive" onclick="window.location.href='chat-bot/index.html'">
+        <div class="sidebar-item active">
           <i class="ph-bold ph-sparkle icon-sm"></i>
           <p>Chatbot</p>
         </div>
       </div>
     </div>
-
     <div class="sidebar-user">
       <div class="avatar" id="sidebarAvatar">DB</div>
       <span id="sidebarUserName">Daniel Bueno</span>
@@ -59,87 +58,20 @@
   </aside>
 
   <main class="main-content">
-
-    <section class="greeting-section">
-      <h1 class="greeting-title">
-        <span id="gettingText">Boa noite</span>,
-        <div class="greeting-name serif" id="greetingUserName">Daniel Bueno!</div>
-      </h1>
-      <p class="greeting-sub mono">Seja bem-vindo ao seu <span class="highlight">Finance Tracker.</span></p>
-      <div class="date-badge">
-        <i class="ph-fill ph-arrow-circle-left" onclick="changeMonth(-1)"></i>
-        <p class="mono" id="dateText"></p>
-        <i class="ph-fill ph-arrow-circle-right" onclick="changeMonth(1)"></i>
+    <header>
+      <h1 class="page-title serif">Chatbot</h1>
+      <!-- <span class="page-subtitle mono"><i class="ph-bold ph-info"></i>Gere transações por meio de conversas. Informe o que foi a transação, a data e o valor, e o bot criará a transação automaticamente.</span> -->
+      
+    </header> 
+    <div class="chat-container">
+      <div class="chat" id="chat">
       </div>
-    </section>
-
-    <section class="summary-cards">
-
-      <div class="card">
-        <i class="ph-bold ph-trend-up icon emerald"></i>
-        <h2 class="label mono">Receita</h2>
-        <h1 id="incomeText" class="value value-emerald mono"></h1>
+      <div class="form">
+        <input class="input" id="inpMessage" type="text" placeholder="Descreva sua transação">
+        <button class="button" id="btnSend" onclick="sendMessage()"><i class="ph-bold ph-paper-plane-tilt"></i></button>
       </div>
-
-      <div class="card">
-        <i class="ph-bold ph-receipt icon orange"></i>
-        <h2 class="label mono">Gastos</h2>
-        <h1 id="expenseText" class="value value-orange mono"></h1>
-      </div>
-
-      <div class="card">
-        <i class="ph-bold ph-piggy-bank icon slate"></i>
-        <h2 class="label mono">Investido</h2>
-        <h1 id="investmentText" class="value value-slate mono"></h1>
-      </div>
-
-      <div class="card">
-        <i class="ph-bold ph-hand-coins icon taupe"></i>
-        <h2 class="label mono">Saldo</h2>
-        <h1 id="balanceText" class="value value-taupe mono"></h1>
-      </div>
-
-    </section>
-
-    <section class="chart-section">
-      <div class="chart-row">
-        <div class="chart-box">
-          <canvas id="incomeSources"></canvas>
-        </div>
-        <div class="chart-box">
-          <canvas id="expenseSources"></canvas>
-        </div>
-        <div class="chart-box">
-          <canvas id="investmentSources"></canvas>
-        </div>
-      </div>
-    </section>
-
-    <section class="chart-section">
-      <div class="chart-row">
-        <div class="chart-box tall">
-          <h1 class="chart-title mono">Movimentação por dia</h1>
-          <span class="days-week mono">
-            <p class="day-week">dom</p>
-            <p class="day-week">seg</p>
-            <p class="day-week">ter</p>
-            <p class="day-week">qua</p>
-            <p class="day-week">qui</p>
-            <p class="day-week">sex</p>
-            <p class="day-week">sab</p>
-          </span>
-          <div id="calendar">
-          </div>
-          <p class="chart-caption mono" id="calendarCaption"></h1>
-        </div>
-        <div class="chart-box financial-health-container tall">
-          <canvas id="financialHealth"></canvas>
-          <div id="healthPercentage" class="mono"></div>
-          <p class="mono" id="financialHealthMessage"></p>
-        </div>
-      </div>
-    </section>
-
-  </main>
+    </div>
+  </div>
+  <div class="toast mono" id="toast"><i class="ph-bold"></i></div>
 </body>
 </html>

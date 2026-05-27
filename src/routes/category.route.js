@@ -1,7 +1,7 @@
 const express = require('express')
 const router = express.Router()
 
-const categoryController = require("../controllers/category-controller")
+const categoryController = require("../controllers/category.controller")
 
 router.post("/create", (req, res) => {
   categoryController.create(req, res)
@@ -15,7 +15,7 @@ router.delete("/remove", (req, res) => {
   categoryController.remove(req, res)
 })
 
-router.get("/all", (req, res) => {
+router.get("/all/:userId", (req, res) => {
   categoryController.getAllByUser(req, res)
 })
 
