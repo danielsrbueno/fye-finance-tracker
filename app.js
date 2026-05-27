@@ -11,11 +11,11 @@ const APP_PORT = process.env.APP_PORT
 const APP_HOST = process.env.APP_HOST
 
 const app = express()
-const indexRouter = require("./src/routes/index-route")
-const userRouter = require("./src/routes/user-route")
-const transactionRouter = require("./src/routes/transaction-route")
-const categoryRouter = require("./src/routes/category-route")
-const chatBotRouter = require("./src/routes/chat-bot-route")
+const indexRouter = require("./src/routes/index.route")
+const userRouter = require("./src/routes/user.route")
+const transactionRouter = require("./src/routes/transaction.route")
+const categoryRouter = require("./src/routes/category.route")
+const chatbotRouter = require("./src/routes/chatbot.route")
 
 app.use(express.json())
 app.use(express.urlencoded({ extended: false }))
@@ -26,7 +26,7 @@ app.use("/", indexRouter)
 app.use("/user", userRouter)
 app.use("/transaction", transactionRouter)
 app.use("/category", categoryRouter)
-app.use("/chat-bot", chatBotRouter)
+app.use("/chat-bot", chatbotRouter)
 
 app.listen(APP_PORT, () => {
   console.log(`

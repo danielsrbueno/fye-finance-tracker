@@ -1,5 +1,5 @@
-const transactionModel = require('../models/transaction-model')
-const categoryModel = require('../models/category-model')
+const transactionModel = require('../models/transaction.model')
+const categoryModel = require('../models/category.model')
 
 const create = (req, res) => {
   const user = req.body.userId

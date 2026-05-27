@@ -1,4 +1,4 @@
-const chatBotModel = require("../models/chat-bot-model")
+const chatbotModel = require("../models/chatbot.model")
 
 const sendMessage = async (req, res) => {
   try {
@@ -7,7 +7,7 @@ const sendMessage = async (req, res) => {
     if (!message) 
       return res.status(400).json({ message: "Mensagem obrigatória" })
 
-    const response = await chatBotModel.generateTransaction(message)
+    const response = await chatbotModel.generateTransaction(message)
     return res.json(response)
   } catch (error) {
     console.error(error)

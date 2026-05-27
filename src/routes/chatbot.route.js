@@ -1,10 +1,10 @@
 const express = require('express')
 const router = express.Router()
 
-const chatBotController = require("../controllers/chat-bot-controller")
+const chatbotController = require("../controllers/chatBot.controller")
 
 router.post("/send-message", (req, res) => {
-  chatBotController.sendMessage(req, res)
+  chatbotController.sendMessage(req, res)
 })
 
 module.exports = router

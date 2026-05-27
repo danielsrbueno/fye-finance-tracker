@@ -1,4 +1,4 @@
-const categoryModel = require("../models/category-model")
+const categoryModel = require("../models/category.model")
 
 const create = (req, res) => {
   const { userId, categoryName, categoryType } = req.body

@@ -1,7 +1,7 @@
 const express = require('express')
 const router = express.Router()
 
-const categoryController = require("../controllers/category-controller")
+const categoryController = require("../controllers/category.controller")
 
 router.post("/create", (req, res) => {
   categoryController.create(req, res)
