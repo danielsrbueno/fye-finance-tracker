@@ -728,6 +728,11 @@ footer {
   margin: 0;
 }
 
+.footer-bottom span {
+  display: flex;
+  gap: 0.5rem
+}
+
 .footer-bottom a {
   font-weight: 600;
   color: var(--color-taupe-100);
