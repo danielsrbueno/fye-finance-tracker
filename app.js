@@ -29,15 +29,20 @@ app.use("/category", categoryRouter)
 app.use("/chat-bot", chatBotRouter)
 
 app.listen(APP_PORT, () => {
-    console.log(`
-    ##   ##  ######   #####             ####       ##     ######     ##              ##  ##    ####    ######  
-    ##   ##  ##       ##  ##            ## ##     ####      ##      ####             ##  ##     ##         ##  
-    ##   ##  ##       ##  ##            ##  ##   ##  ##     ##     ##  ##            ##  ##     ##        ##   
-    ## # ##  ####     #####    ######   ##  ##   ######     ##     ######   ######   ##  ##     ##       ##    
-    #######  ##       ##  ##            ##  ##   ##  ##     ##     ##  ##            ##  ##     ##      ##     
-    ### ###  ##       ##  ##            ## ##    ##  ##     ##     ##  ##             ####      ##     ##      
-    ##   ##  ######   #####             ####     ##  ##     ##     ##  ##              ##      ####    ######  
-    \n\n\n                                                                                                 
-    Servidor do seu site já está rodando! Acesse o caminho a seguir para visualizar .: http://${APP_HOST}:${APP_PORT} :. \n\n
-    Você está rodando sua aplicação em ambiente de .:${process.env.ENVIRONMENT}:. \n\n`)
+  console.log(`
+      /$$$$$$$$                 
+    | $$_____/                 
+    | $$    /$$   /$$  /$$$$$$ 
+    | $$$$$| $$  | $$ /$$__  $$
+    | $$__/| $$  | $$| $$$$$$$$
+    | $$   | $$  | $$| $$_____/
+    | $$   |  $$$$$$$|  $$$$$$$
+    |__/    \____  $$ \_______/
+            /$$  | $$          
+          |  $$$$$$/          
+            \______/         
+    \n                                                                  
+    Servidor do seu site já está rodando! Acesse o caminho a seguir para visualizar .: http://${APP_HOST}:${APP_PORT} :.
+    Você está rodando sua aplicação em ambiente de .:${process.env.ENVIRONMENT}:. \n\n
+  `)
 })
