@@ -18,6 +18,7 @@ const init = async () => {
 }
 
 const sendMessage = async () => {
+  const buttonElement = document.getElementById('btnSend')
   const messageElement = document.getElementById('inpMessage')
   const userMessage = document.getElementById('inpMessage').value.trim()
   const userFirstName = sessionStorage.getItem("userName").split(" ")[0]
@@ -29,6 +30,7 @@ const sendMessage = async () => {
     return showToast("Digite uma mensagem.", "error")
   
   messageElement.value = ""
+  buttonElement.disabled = true
 
   const categories = await getCategories(userId)
 
@@ -40,38 +42,43 @@ const sendMessage = async () => {
   `
 
   createMessageElement(userMessage)
+  try {
+    const apiResponseJson = await fetch("/chat-bot/send-message", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({ message })
+    })
 
-  const apiResponseJson = await fetch("/chat-bot/send-message", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify({ message })
-  })
+    const data = await apiResponseJson.json()
 
-  const data = await apiResponseJson.json()
+    const { response, itemName, amount, eventDate, category, description } = data
 
-  const { response, itemName, amount, eventDate, category, description } = data
+    const responseMessage = `
+      ${response} <br>
+      <hr>
+      <strong>Dados da transação</strong> <br>
+      Nome: ${itemName} <br>
+      Valor: R$${amount} <br>
+      Data: ${eventDate.split("-")[2]}/${eventDate.split("-")[1]}/${eventDate.split("-")[0]} <br>
+      Categoria: ${
+        categories.map(ctg => ctg.id === category ? ctg.category : -1)
+        .filter(ctg => ctg !== -1)[0]
+      } <br>
+      Descrição: ${description} <br>
+    `
 
-  const responseMessage = `
-    ${response} <br>
-    <hr>
-    <strong>Dados da transação</strong> <br>
-    Nome: ${itemName} <br>
-    Valor: R$${amount} <br>
-    Data: ${eventDate.split("-")[2]}/${eventDate.split("-")[1]}/${eventDate.split("-")[0]} <br>
-    Categoria: ${
-      categories.map(ctg => ctg.id === category ? ctg.category : -1)
-      .filter(ctg => ctg !== -1)[0]
-    } <br>
-    Descrição: ${description} <br>
-  `
+    createMessageElement(responseMessage)
+    saveMessage(userMessage)
+    saveMessage(responseMessage)
+    
+    createTransaction(itemName, amount, eventDate, category, description)
+  } catch {
+    showToast("Algo deu errado. Tente novamente mais tarde.", "error")
+  }
 
-  createMessageElement(responseMessage)
-  saveMessage(userMessage)
-  saveMessage(responseMessage)
-  
-  createTransaction(itemName, amount, eventDate, category, description)
+  buttonElement.disabled = false
 }
 
 const getCategories = async (userId) => {
