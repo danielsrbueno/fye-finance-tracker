@@ -1,22 +1,14 @@
 <div align="center">
 
-<svg width="80px" height="80px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-  <path fill-rule="evenodd" clip-rule="evenodd" d="M11.8202 1.17444L12.7809 2.37532C13.9186 3.7975 14.3379 5.20075 14.299 6.54704C14.2612 7.85605 13.7915 9.02304 13.3225 9.98619C13.1649 10.3098 12.9946 10.6349 12.8386 10.9327C12.7663 11.0708 12.697 11.203 12.6335 11.3265C12.4214 11.739 12.2593 12.0804 12.1563 12.3799C12.0528 12.6806 12.0336 12.8708 12.0468 12.991C12.0567 13.0817 12.0872 13.173 12.2071 13.2929C12.4054 13.4912 12.5517 13.5469 12.6404 13.5639C12.731 13.5814 12.8515 13.5757 13.0239 13.5049C13.4095 13.3463 13.8803 12.9334 14.3743 12.314C14.8488 11.719 15.2631 11.0384 15.5634 10.4938C15.712 10.2242 15.8295 9.99387 15.9091 9.83234C15.9488 9.75168 15.979 9.6885 15.9988 9.64651L16.0205 9.59999L16.0252 9.58959L16.0259 9.58824L16.026 9.5879L16.0261 9.58776L16.0261 9.58771L16.6117 8.29169L17.6332 9.28206C19.946 11.5244 20.6617 14.7623 19.1415 17.7019C17.8195 20.2583 15.1123 22 12 22C7.60499 22 4 18.5172 4 14.1697C4 11.8793 5.26687 10.2404 6.64671 8.62914C6.82673 8.41894 7.0107 8.20711 7.19757 7.99194C8.47882 6.5167 9.89649 4.88437 11.1122 2.5397L11.8202 1.17444ZM17.1269 11.7924C16.8148 12.3321 16.4089 12.9705 15.9379 13.561C15.3851 14.2542 14.6528 14.9975 13.7846 15.3546C13.33 15.5415 12.8109 15.6335 12.2624 15.5279C11.7119 15.4219 11.2196 15.1338 10.7929 14.7071C10.3617 14.2759 10.1196 13.7664 10.0586 13.2082C10.0008 12.6794 10.1126 12.1723 10.2651 11.729C10.4181 11.2846 10.6372 10.8353 10.8549 10.412C10.9327 10.2606 11.0095 10.114 11.0856 9.96886C11.2338 9.68618 11.3792 9.40866 11.5243 9.11064C11.9559 8.22433 12.2745 7.36712 12.2998 6.48929C12.3134 6.01847 12.2432 5.51449 12.0273 4.9728C10.9109 6.77097 9.71215 8.14915 8.69763 9.31555C8.51377 9.52693 8.33596 9.73135 8.16579 9.93006C6.7748 11.5543 6 12.6877 6 14.1697C6 17.3667 8.66302 20 12 20C14.3543 20 16.3818 18.6846 17.365 16.7832C18.2267 15.1169 18.1049 13.3127 17.1269 11.7924Z" fill="#f97316"/>
-</svg>
+<img src="/public/assets/images/logo/logo-readme.png">
 
 # Fye Finance Tracker (MVP)
 
 **Fuel Your Economy** — Sistema web de gestão financeira pessoal
+<br>
+[![Node.js](https://img.shields.io/badge/Node.js-339933?style=for-the-badge&logo=nodedotjs&logoColor=white)](https://nodejs.org/) [![Express.js](https://img.shields.io/badge/Express.js-000000?style=for-the-badge&logo=express&logoColor=white)](https://expressjs.com/) [![MySQL](https://img.shields.io/badge/MySQL-4479A1?style=for-the-badge&logo=mysql&logoColor=white)](https://www.mysql.com/) [![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black)](https://developer.mozilla.org/pt-BR/docs/Web/JavaScript) [![HTML5](https://img.shields.io/badge/HTML5-E34F26?style=for-the-badge&logo=html5&logoColor=white)](https://developer.mozilla.org/pt-BR/docs/Web/HTML) [![CSS3](https://img.shields.io/badge/CSS3-1572B6?style=for-the-badge&logo=css3&logoColor=white)](https://developer.mozilla.org/pt-BR/docs/Web/CSS) [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=for-the-badge)](./LICENSE)
 
-[![Node.js](https://img.shields.io/badge/Node.js-339933?style=for-the-badge&logo=nodedotjs&logoColor=white)](https://nodejs.org/)
-[![Express.js](https://img.shields.io/badge/Express.js-000000?style=for-the-badge&logo=express&logoColor=white)](https://expressjs.com/)
-[![MySQL](https://img.shields.io/badge/MySQL-4479A1?style=for-the-badge&logo=mysql&logoColor=white)](https://www.mysql.com/)
-[![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black)](https://developer.mozilla.org/pt-BR/docs/Web/JavaScript)
-[![HTML5](https://img.shields.io/badge/HTML5-E34F26?style=for-the-badge&logo=html5&logoColor=white)](https://developer.mozilla.org/pt-BR/docs/Web/HTML)
-[![CSS3](https://img.shields.io/badge/CSS3-1572B6?style=for-the-badge&logo=css3&logoColor=white)](https://developer.mozilla.org/pt-BR/docs/Web/CSS)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=for-the-badge)](./LICENSE)
-
-[Sobre](#-sobre) • [Funcionalidades](#-funcionalidades) • [Tecnologias](#-tecnologias) • [Arquitetura](#-arquitetura) • [Instalação](#-instalação) • [Uso](#-uso) • [API](#-api) • [Estrutura](#-estrutura-do-projeto) • [Próximos Passos](#-próximos-passos)
+##### [Sobre](#-sobre) • [Funcionalidades](#-funcionalidades) • [Tecnologias](#-tecnologias) • [Arquitetura](#-arquitetura) • [Instalação](#-instalação) • [Uso](#-uso) • [API](#-api) • [Estrutura](#-estrutura-do-projeto) • [Próximos Passos](#-próximos-passos)
 
 </div>
 
@@ -24,11 +16,9 @@
 
 ## 📖 Sobre
 
-O **Fye Finance Tracker** é uma aplicação web do tipo finance tracker desenvolvida como projeto semestral individual na [São Paulo Tech School](https://www.sptechschool.com.br/), no curso de Ciência da Computação.
+O **Fye Finance Tracker** é uma aplicação web do tipo finance tracker desenvolvida como projeto semestral individual na [São Paulo Tech School](https://www.sptech.school/), no curso de Ciência da Computação.
 
 O projeto nasceu de uma dor real: a falta de uma ferramenta prática e visualmente clara para o controle financeiro pessoal. Mais do que um exercício acadêmico, o Fye é um MVP (Minimum Viable Product) funcional que visa contribuir com a educação financeira — tema urgente no Brasil, onde mais de 81 milhões de pessoas estão inadimplentes e apenas 39% da população sente ter real controle sobre suas finanças (Serasa Experian / Creditas, 2025–2026).
-
-O nome **Fye** significa **Fuel Your Economy** (Impulsione a Sua Economia).
 
 > Projeto desenvolvido por [Daniel Bueno](https://danbueno.com).
 
@@ -41,11 +31,15 @@ O nome **Fye** significa **Fuel Your Economy** (Impulsione a Sua Economia).
 - Preview visual da dashboard em mockup de navegador
 - Navegação para cadastro e login
 
+<img src="/public/assets/images/hero-print.png">
+
 ### 🔐 Autenticação
 - Cadastro de usuário com validação de campos em tempo real
 - Indicador visual de força da senha
 - Login com email e senha (hash SHA-256)
 - Sessão gerenciada via `sessionStorage`
+
+<img src="/public/assets/images/register-print.png">
 
 ### 📊 Dashboard (Visão Geral)
 - Saudação personalizada com base no horário do dia
@@ -62,6 +56,8 @@ O nome **Fye** significa **Fuel Your Economy** (Impulsione a Sua Economia).
   - Movimentação diária (heatmap de calendário mensal)
 - Navegação mensal com setas de controle
 
+<img src="/public/assets/images/dashboard-print.png">
+
 ### 💳 Transações
 - Cadastro de receitas, despesas e investimentos
 - Edição inline de todos os campos diretamente na lista
@@ -71,17 +67,22 @@ O nome **Fye** significa **Fuel Your Economy** (Impulsione a Sua Economia).
 - **Filtro** por tipo: todos, renda, gasto ou investimento
 - Ordem ascendente ou descendente
 
+<img src="/public/assets/images/transactions-print.png">
+
 ### 🏷️ Categorias
 - Criação, edição e exclusão de categorias personalizadas
 - Tipos: Renda, Gasto ou Investimento
 - Gerenciadas via modal dedicado na página de Transações
+
+<img src="/public/assets/images/categories-print.png">
 
 ### 🤖 Chatbot com IA (Gemini)
 - Cadastro de transações por **linguagem natural**
 - O usuário descreve a transação em texto livre
 - A IA (Gemini 2.5 Flash) interpreta e extrai: nome, valor, data, categoria e descrição
 - A transação é criada automaticamente após confirmação
-- Histórico de conversa persistido via `localStorage`
+
+<img src="/public/assets/images/chatbot-print.png">
 
 ---
 
@@ -123,9 +124,9 @@ O projeto segue uma arquitetura cliente-servidor com dois servidores distintos:
 │                         CLIENTE                             │
 │              Navegador (Chrome, Firefox, Edge...)           │
 │                    via internet (HTTP)                      │
-└────────────────────────┬────────────────────────────────────┘
-                         │
-                         ▼
+└─────────────────────────────┬───────────────────────────────┘
+                              │
+                              ▼
 ┌─────────────────────────────────────────────────────────────┐
 │                       SERVIDOR 2                            │
 │                    Servidor Web (Node.js)                   │
@@ -134,10 +135,10 @@ O projeto segue uma arquitetura cliente-servidor com dois servidores distintos:
 │  │  HTML/CSS/JS │  │  Express.js  │  │   API Gemini     │   │
 │  │   (public/)  │  │  (REST API)  │  │  (Chatbot IA)    │   │
 │  └──────────────┘  └──────┬───────┘  └──────────────────┘   │
-│                            │ JSON endpoints                 │
-└────────────────────────────┼────────────────────────────────┘
-                             │ via internet (MySQL)
-                             ▼
+│                           │ JSON endpoints                  │
+└───────────────────────────┼─────────────────────────────────┘
+                            │ via internet (MySQL)
+                            ▼
 ┌─────────────────────────────────────────────────────────────┐
 │                       SERVIDOR 1                            │
 │              Banco de Dados (VirtualBox + Lubuntu)          │
